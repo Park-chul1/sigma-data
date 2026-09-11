@@ -1,0 +1,20 @@
+name,nullable,type,comment
+permno,True,INTEGER,PERMNO
+delistingdt,True,DATE,Delisting Date
+deldtprc,True,"NUMERIC(13, 6)",Delisting Date Price
+deldtprcflg,True,VARCHAR(2),Delisting Date Price Flag
+delactiontype,True,VARCHAR(5),Delisting Corporate Action Type
+delstatustype,True,VARCHAR(4),Delisting Completion Status Type
+delreasontype,True,VARCHAR(5),Delisting Reason Type
+delpaymenttype,True,VARCHAR(4),Delisting Payment Summary Type
+delpermno,True,INTEGER,Delisting PERMNO
+delpermco,True,INTEGER,Delisting PERMCO
+delret,True,"NUMERIC(10, 6)",Delisting Total Return
+delretmisstype,True,VARCHAR(4),Delisting Return Missing Type
+delnextdt,True,DATE,Delisting Next Price Date
+delnextprc,True,"NUMERIC(13, 6)",Delisting Next Price
+delnextprcflg,True,VARCHAR(2),Delisting Next Price Flag
+delamtdt,True,DATE,Delisting Amount Date
+deldivamt,True,"NUMERIC(13, 6)",Delisting Dividend Amount
+deldistype,True,VARCHAR(2),Delisting Distributions Type
+deldlydt,True,DATE,Delisting Daily Date

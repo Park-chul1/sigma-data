@@ -1,0 +1,950 @@
+name,nullable,type,comment
+gvkey,True,VARCHAR(7),Global Company Key
+datadate,True,DATE,Data Date
+fyear,True,INTEGER,Data Year - Fiscal
+indfmt,True,VARCHAR(13),Industry Format
+consol,True,VARCHAR(3),Level of Consolidation - Company Annual Descriptor
+popsrc,True,VARCHAR(2),Population Source
+datafmt,True,VARCHAR(13),Data Format
+tic,True,VARCHAR(8),Ticker Symbol
+cusip,True,VARCHAR(21),CUSIP
+conm,True,VARCHAR(70),Company Name
+acctchg,True,VARCHAR(9),Adoption of Accounting Changes
+acctstd,True,VARCHAR(9),Accounting Standard
+acqmeth,True,VARCHAR(3),Acquisition Method
+adrr,True,"NUMERIC(18, 4)",ADR Ratio
+ajex,True,"NUMERIC(24, 12)",Adjustment Factor (Company) - Cumulative by Ex-Date
+ajp,True,"NUMERIC(24, 12)",Adjustment Factor (Company) - Cumulative byPay-Date
+bspr,True,VARCHAR(9),Balance Sheet Presentation
+compst,True,VARCHAR(9),Comparability Status
+curcd,True,VARCHAR(4),ISO Currency Code
+curncd,True,VARCHAR(4),Native Currency Code
+currtr,True,"NUMERIC(24, 12)",Currency Translation Rate
+curuscn,True,"NUMERIC(18, 4)",US Canadian Translation Rate
+final,True,VARCHAR(3),Final Indicator Flag
+fyr,True,SMALLINT,Fiscal Year-end Month
+ismod,True,INTEGER,Income Statement Model Number
+ltcm,True,VARCHAR(9),Long Term Contract Method
+ogm,True,VARCHAR(9),OIL & GAS METHOD
+pddur,True,SMALLINT,Period Duration
+scf,True,INTEGER,Cash Flow Format
+src,True,INTEGER,Source Document
+stalt,True,VARCHAR(3),Status Alert
+udpl,True,VARCHAR(9),Utility - Liberalized Depreciation Code
+upd,True,INTEGER,Update Code
+apdedate,True,DATE,Actual Period End date
+fdate,True,DATE,Final Date
+pdate,True,DATE,Preliminary Date
+acchg,True,"NUMERIC(18, 4)",Accounting Changes - Cumulative Effect
+acco,True,"NUMERIC(18, 4)",Acceptances Outstanding
+accrt,True,"NUMERIC(19, 4)",ARO Accretion Expense
+acdo,True,"NUMERIC(18, 4)",Current Assets of Discontinued Operations
+aco,True,"NUMERIC(18, 4)",Current Assets - Other - Total
+acodo,True,"NUMERIC(18, 4)",Other Current Assets Excl Discontinued Operations
+acominc,True,"NUMERIC(18, 4)",Accumulated Other Comprehensive Income (Loss)
+acox,True,"NUMERIC(18, 4)",Current Assets - Other - Sundry
+acoxar,True,"NUMERIC(18, 4)",Current Assets - Other - Total As Reported
+acqao,True,"NUMERIC(18, 4)",Acquired Assets > Other Long-Term Assets
+acqcshi,True,"NUMERIC(18, 4)",Shares Issued for Acquisition
+acqgdwl,True,"NUMERIC(18, 4)",Acquired Assets - Goodwill
+acqic,True,"NUMERIC(18, 4)",Acquisitions - Current Income Contribution
+acqintan,True,"NUMERIC(18, 4)",Acquired Assets - Intangibles
+acqinvt,True,"NUMERIC(18, 4)",Acquired Assets - Inventory
+acqlntal,True,"NUMERIC(18, 4)",Acquired Loans
+acqniintc,True,"NUMERIC(18, 4)",Net Interest Income Contribution
+acqppe,True,"NUMERIC(18, 4)","Acquired Assets > Property, Plant & Equipment"
+acqsc,True,"NUMERIC(18, 4)",Acquisitions - Current Sales Contribution
+act,True,"NUMERIC(18, 4)",Current Assets - Total
+adpac,True,"NUMERIC(18, 4)",Amortization of Deferred Policy Acquisition Costs
+aedi,True,"NUMERIC(18, 4)",Accrued Expenses and Deferred Income
+afudcc,True,"NUMERIC(18, 4)",Allowance for Funds Used During Construction (Cash Flow)
+afudci,True,"NUMERIC(18, 4)",Allowance for Funds Used During Construction (Investing) (Cash Flow)
+aldo,True,"NUMERIC(18, 4)",Long-term Assets of Discontinued Operations
+am,True,"NUMERIC(18, 4)",Amortization of Intangibles
+amc,True,"NUMERIC(18, 4)",Amortization (Cash Flow) - Utility
+amdc,True,"NUMERIC(18, 4)",Amortization of Deferred Charges
+amgw,True,"NUMERIC(18, 4)",Amortization of Goodwill
+ano,True,"NUMERIC(18, 4)",Assets Netting & Other Adjustments
+ao,True,"NUMERIC(18, 4)",Assets - Other
+aocidergl,True,"NUMERIC(18, 4)",Accum Other Comp Inc - Derivatives Unrealized Gain/Loss
+aociother,True,"NUMERIC(18, 4)",Accum Other Comp Inc - Other Adjustments
+aocipen,True,"NUMERIC(18, 4)",Accum Other Comp Inc - Min Pension Liab Adj
+aocisecgl,True,"NUMERIC(18, 4)",Accum Other Comp Inc - Unreal G/L Ret Int in Sec Assets
+aodo,True,"NUMERIC(18, 4)",Other Assets excluding Discontinued Operations
+aol2,True,"NUMERIC(18, 4)",Assets Level2 (Observable)
+aoloch,True,"NUMERIC(18, 4)",Assets and Liabilities - Other - Net Change
+aox,True,"NUMERIC(18, 4)",Assets - Other - Sundry
+ap,True,"NUMERIC(18, 4)",Accounts Payable - Trade
+apalch,True,"NUMERIC(18, 4)",Accounts Payable and Accrued Liabilities - Increase/(Decrease)
+apb,True,"NUMERIC(18, 4)","Accounts Payable/Creditors - Brokers, Dealers, and Clearing Organizations"
+apc,True,"NUMERIC(18, 4)",Accounts Payable/Creditors - Customer
+apofs,True,"NUMERIC(18, 4)",Accounts Payable/Creditors - Other - FS
+aqa,True,"NUMERIC(18, 4)",Acquisition/Merger After-tax
+aqc,True,"NUMERIC(18, 4)",Acquisitions
+aqd,True,"NUMERIC(18, 4)",Acquisition/Merger Diluted EPS Effect
+aqeps,True,"NUMERIC(18, 4)",Acquisition/Merger Basic EPS Effect
+aqi,True,"NUMERIC(18, 4)",Acquisitions - Income Contribution
+aqp,True,"NUMERIC(18, 4)",Acquisition/Merger Pretax
+aqpl1,True,"NUMERIC(18, 4)",Assets Level1 (Quoted Prices)
+aqs,True,"NUMERIC(18, 4)",Acquisitions - Sales Contribution
+arb,True,"NUMERIC(18, 4)","Accounts Receivable/Debtors - Brokers, Dealers, and Clearing Organizations"
+arc,True,"NUMERIC(18, 4)",Accounts Receivable/Debtors - Customer
+arce,True,"NUMERIC(18, 4)",As Reported Core - After-tax
+arced,True,"NUMERIC(18, 4)",As Reported Core - Diluted EPS Effect
+arceeps,True,"NUMERIC(18, 4)",As Reported Core - Basic EPS Effect
+artfs,True,"NUMERIC(18, 4)",Accounts Receivable/Debtors - Total
+at,True,"NUMERIC(18, 4)",Assets - Total
+aul3,True,"NUMERIC(18, 4)",Assets Level3 (Unobservable)
+autxr,True,"NUMERIC(18, 4)",Appropriations to Untaxed Reserves
+balr,True,"NUMERIC(18, 4)",Benefits Assumed - Life
+banlr,True,"NUMERIC(18, 4)",Benefits Assumed - Nonlife
+bast,True,"NUMERIC(18, 4)",Average Short-Term Borrowings
+bastr,True,"NUMERIC(18, 4)",Average Short-Term Borrowings Rate
+batr,True,"NUMERIC(18, 4)",Benefits Assumed - Total
+bcef,True,"NUMERIC(18, 4)","Brokerage, Clearing and Exchange Fees"
+bclr,True,"NUMERIC(18, 4)",Benefits Ceded - Life
+bcltbl,True,"NUMERIC(18, 4)",Benefits and Claims - Total (Business Line)
+bcnlr,True,"NUMERIC(18, 4)",Benefits Ceded - Nonlife
+bcrbl,True,"NUMERIC(18, 4)",Benefits and Claims - Reinsurance (Business Line)
+bct,True,"NUMERIC(18, 4)",Benefits and Claims - Total (Insurance)
+bctbl,True,"NUMERIC(18, 4)",Benefits and Claims - Other (Business Line)
+bctr,True,"NUMERIC(18, 4)",Benefits Ceded - Total
+billexce,True,"NUMERIC(19, 4)",Billings in Excess of Cost & Earnings
+bkvlps,True,"NUMERIC(18, 4)",Book Value Per Share
+bltbl,True,"NUMERIC(18, 4)",Benefits - Life - Total (Business Line)
+ca,True,"NUMERIC(18, 4)",Customers'' Acceptance
+capr1,True,"NUMERIC(18, 4)",Risk-Adjusted Capital Ratio - Tier 1
+capr2,True,"NUMERIC(18, 4)",Risk-Adjusted Capital Ratio - Tier 2
+capr3,True,"NUMERIC(18, 4)",Risk-Adjusted Capital Ratio - Combined
+caps,True,"NUMERIC(18, 4)",Capital Surplus/Share Premium Reserve
+capsft,True,"NUMERIC(19, 4)",Capitalized Software
+capx,True,"NUMERIC(18, 4)",Capital Expenditures
+capxv,True,"NUMERIC(18, 4)","Capital Expend Property, Plant and Equipment Schd V"
+cb,True,"NUMERIC(18, 4)",Compensating Balance
+cbi,True,"NUMERIC(18, 4)",Claims Incurred - Insurance
+cdpac,True,"NUMERIC(18, 4)",Capitalized Deferred Polcy Acquisition Costs
+cdvc,True,"NUMERIC(18, 4)",Cash Dividends on Common Stock (Cash Flow)
+ceiexbill,True,"NUMERIC(19, 4)",Cost & Earnings in Excess of Billings
+ceq,True,"NUMERIC(18, 4)",Common/Ordinary Equity - Total
+ceql,True,"NUMERIC(18, 4)",Common Equity - Liquidation Value
+ceqt,True,"NUMERIC(18, 4)",Common Equity - Tangible
+cfbd,True,"NUMERIC(18, 4)",Commissions and Fees - (Broker/Dealer)
+cfere,True,"NUMERIC(18, 4)",Commissions and Fees - (Real Estate)
+cfo,True,"NUMERIC(18, 4)",Commissions and Fees - Other
+cfpdo,True,"NUMERIC(18, 4)",Commissions and Fees Paid - Other
+cga,True,"NUMERIC(18, 4)",Capital Gains - After-Tax
+cgri,True,"NUMERIC(18, 4)",Capital Gains - Realized (Insurance)
+cgti,True,"NUMERIC(18, 4)",Capital Gains - Total (Insurance)
+cgui,True,"NUMERIC(18, 4)",Capital Gains - Unrealized (Insurance)
+ch,True,"NUMERIC(18, 4)",Cash
+che,True,"NUMERIC(18, 4)",Cash and Short-Term Investments
+chech,True,"NUMERIC(18, 4)",Cash and Cash Equivalents - Increase/(Decrease)
+chs,True,"NUMERIC(18, 4)",Cash and Deposits - Segregated
+ci,True,"NUMERIC(18, 4)",Comprehensive Income - Total
+cibegni,True,"NUMERIC(18, 4)",Comp Inc - Beginning Net Income
+cicurr,True,"NUMERIC(18, 4)",Comp Inc - Currency Trans Adj
+cidergl,True,"NUMERIC(18, 4)",Comp Inc - Derivative Gains/Losses
+cimii,True,"NUMERIC(18, 4)",Comprehensive Income - Noncontrolling Interest
+ciother,True,"NUMERIC(18, 4)",Comp Inc - Other Adj
+cipen,True,"NUMERIC(18, 4)",Comp Inc - Minimum Pension Adj
+cisecgl,True,"NUMERIC(18, 4)",Comp Inc - Securities Gains/Losses
+citotal,True,"NUMERIC(18, 4)",Comprehensive Income - Parent
+cld2,True,"NUMERIC(18, 4)",Capitalized Leases - Due in 2nd Year
+cld3,True,"NUMERIC(18, 4)",Capitalized Leases - Due in 3rd Year
+cld4,True,"NUMERIC(18, 4)",Capitalized Leases - Due in 4th Year
+cld5,True,"NUMERIC(18, 4)",Capitalized Leases - Due in 5th Year
+clfc,True,"NUMERIC(18, 4)",Contingent Liabilities - Forward and Future Contracts
+clfx,True,"NUMERIC(18, 4)",Contingent Liabilities - Foreign Exchange Commitments
+clg,True,"NUMERIC(18, 4)",Contingent Liabilities - Guarantees
+clis,True,"NUMERIC(18, 4)",Contingent Liabilities - Interest Rate Swaps
+cll,True,"NUMERIC(18, 4)",Contingent Liabilities - Letters of Credit
+cllc,True,"NUMERIC(18, 4)",Contingent Liabilities - Loan Commitments
+clo,True,"NUMERIC(18, 4)",Contingent Liabilities - Other
+clrll,True,"NUMERIC(18, 4)",Credit Loss Reserve Allocated for LDC Loans
+clt,True,"NUMERIC(18, 4)",Contingent Liabilities - Total
+cmp,True,"NUMERIC(18, 4)",Commercial Paper
+cnltbl,True,"NUMERIC(18, 4)",Claims - Non-Life - Total (Business Line)
+cogs,True,"NUMERIC(18, 4)",Cost of Goods Sold
+cpcbl,True,"NUMERIC(18, 4)",Commercial Property and Casualty Claims (Business Line)
+cpdoi,True,"NUMERIC(18, 4)",Claims Paid - Other
+cpnli,True,"NUMERIC(18, 4)",Claims Paid - Non-Life
+cppbl,True,"NUMERIC(18, 4)",Commercial Property and Casualty Premiums (Business Line)
+cprei,True,"NUMERIC(18, 4)",Claims Paid - Reinsurance
+crv,True,"NUMERIC(18, 4)",Consolidation Reserves
+crvnli,True,"NUMERIC(18, 4)",Reserves for Claims (Losses) - Nonlife (Insurance)
+cshfd,True,"NUMERIC(18, 4)",Common Shares Used to Calc Earnings Per Share - Fully Diluted
+cshi,True,"NUMERIC(18, 4)",Common Shares Issued
+csho,True,"NUMERIC(18, 4)",Common Shares Outstanding
+cshpri,True,"NUMERIC(18, 4)",Common Shares Used to Calculate Earnings Per Share - Basic
+cshr,True,"NUMERIC(18, 4)",Common/Ordinary Shareholders
+cshrc,True,"NUMERIC(18, 4)",Common Shares Reserved for Conversion - Convertible Debt
+cshrp,True,"NUMERIC(18, 4)",Common Shares Reserved for Conversion - Preferred Stock
+cshrso,True,"NUMERIC(18, 4)",Common Shares Reserved for Conversion - Stock Options
+cshrt,True,"NUMERIC(18, 4)",Common Shares Reserved for Conversion - Total
+cshrw,True,"NUMERIC(18, 4)",Common Shares Reserved for Conversion - Warrants and Other
+cstk,True,"NUMERIC(18, 4)",Common/Ordinary Stock (Capital)
+cstkcv,True,"NUMERIC(18, 4)",Common Stock-Carrying Value
+cstke,True,"NUMERIC(18, 4)",Common Stock Equivalents - Dollar Savings
+dbi,True,"NUMERIC(18, 4)",Death Benefits - Insurance
+dc,True,"NUMERIC(18, 4)",Deferred Charges
+dclo,True,"NUMERIC(18, 4)",Debt - Capitalized Lease Obligations
+dcom,True,"NUMERIC(18, 4)",Deferred Compensation
+dcpstk,True,"NUMERIC(18, 4)",Convertible Debt and Preferred Stock
+dcs,True,"NUMERIC(18, 4)",Debt - Consolidated Subsidiary
+dcvsr,True,"NUMERIC(18, 4)",Debt - Senior Convertible
+dcvsub,True,"NUMERIC(18, 4)",Debt - Subordinated Convertible
+dcvt,True,"NUMERIC(18, 4)",Debt - Convertible
+dd,True,"NUMERIC(18, 4)",Debt - Debentures
+dd1,True,"NUMERIC(18, 4)",Long-Term Debt Due in One Year
+dd2,True,"NUMERIC(18, 4)",Debt - Due in 2nd Year
+dd3,True,"NUMERIC(18, 4)",Debt - Due in 3rd Year
+dd4,True,"NUMERIC(18, 4)",Debt - Due in 4th Year
+dd5,True,"NUMERIC(18, 4)",Debt - Due in 5th Year
+depc,True,"NUMERIC(18, 4)",Depreciation and Depletion (Cash Flow)
+derac,True,"NUMERIC(19, 4)",Derivative Assets - Current
+deralt,True,"NUMERIC(19, 4)",Derivative Assets Long-Term
+derhedgl,True,"NUMERIC(19, 4)",Gains/Losses on Derivatives and Hedging
+derlc,True,"NUMERIC(19, 4)",Derivative Liabilities- Current
+derllt,True,"NUMERIC(19, 4)",Derivative Liabilities Long-Term
+dfpac,True,"NUMERIC(18, 4)",Deferred Policy Acquisition Costs
+dfs,True,"NUMERIC(18, 4)",Debt - Finance Subsidiary
+dfxa,True,"NUMERIC(18, 4)",Depreciation of Tangible Fixed Assets
+diladj,True,"NUMERIC(18, 4)",Dilution Adjustment
+dilavx,True,"NUMERIC(18, 4)",Dilution Available - Excluding Extraordinary Items
+dlc,True,"NUMERIC(18, 4)",Debt in Current Liabilities - Total
+dlcch,True,"NUMERIC(18, 4)",Current Debt - Changes
+dltis,True,"NUMERIC(18, 4)",Long-Term Debt - Issuance
+dlto,True,"NUMERIC(18, 4)",Other Long-term Debt
+dltp,True,"NUMERIC(18, 4)",Long-Term Debt - Tied to Prime
+dltr,True,"NUMERIC(18, 4)",Long-Term Debt - Reduction
+dltsub,True,"NUMERIC(18, 4)",Long-Term Debt - Subordinated
+dltt,True,"NUMERIC(18, 4)",Long-Term Debt - Total
+dm,True,"NUMERIC(18, 4)",Debt - Mortgages & Other Secured
+dn,True,"NUMERIC(18, 4)",Debt - Notes
+do,True,"NUMERIC(18, 4)",Discontinued Operations
+donr,True,"NUMERIC(18, 4)",Nonrecurring Disc Operations
+dp,True,"NUMERIC(18, 4)",Depreciation and Amortization
+dpacb,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Buildings
+dpacc,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Construction in Progress
+dpacli,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Land and Improvements
+dpacls,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Leases
+dpacme,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Machinery and Equipment
+dpacnr,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Natural Resources
+dpaco,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Other
+dpacre,True,"NUMERIC(18, 4)",Accumulated Depreciation of RE Property
+dpact,True,"NUMERIC(18, 4)","Depreciation, Depletion and Amortization (Accumulated)"
+dpc,True,"NUMERIC(18, 4)",Depreciation and Amortization (Cash Flow)
+dpdc,True,"NUMERIC(18, 4)",Deposits - Demand - Customer
+dpltb,True,"NUMERIC(18, 4)",Deposits - Long-Term Time - Bank
+dpret,True,"NUMERIC(18, 4)",Depr/Amort of Property
+dpsc,True,"NUMERIC(18, 4)",Deposits - Savings - Customer
+dpstb,True,"NUMERIC(18, 4)",Deposits - Short-Term Demand - Bank
+dptb,True,"NUMERIC(18, 4)",Deposits - Total - Banks
+dptc,True,"NUMERIC(18, 4)",Deposits - Total - Customer
+dptic,True,"NUMERIC(18, 4)",Deposits - Time - Customer
+dpvieb,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Ending Balance (Schedule VI)
+dpvio,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Other Changes (Schedule VI)
+dpvir,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Retirements (Schedule VI)
+drc,True,"NUMERIC(18, 4)",Deferred Revenue - Current
+drci,True,"NUMERIC(18, 4)",Deduction From Policy and Claims Reserves for Reinsurance Ceded
+drlt,True,"NUMERIC(18, 4)",Deferred Revenue - Long-term
+ds,True,"NUMERIC(18, 4)",Debt-Subordinated
+dt,True,"NUMERIC(19, 4)",Total Debt Including Current
+dtea,True,"NUMERIC(18, 4)",Extinguishment of Debt After-tax
+dted,True,"NUMERIC(18, 4)",Extinguishment of Debt Diluted EPS Effect
+dteeps,True,"NUMERIC(18, 4)",Extinguishment of Debt Basic EPS Effect
+dtep,True,"NUMERIC(18, 4)",Extinguishment of Debt Pretax
+dudd,True,"NUMERIC(18, 4)",Debt - Unamortized Debt Discount and Other
+dv,True,"NUMERIC(18, 4)",Cash Dividends (Cash Flow)
+dvc,True,"NUMERIC(18, 4)",Dividends Common/Ordinary
+dvdnp,True,"NUMERIC(18, 4)",Dividends Declared and Not Provided
+dvintf,True,"NUMERIC(19, 4)",Dividends & Interest Receivable (Cash Flow)
+dvp,True,"NUMERIC(18, 4)",Dividends - Preferred/Preference
+dvpa,True,"NUMERIC(18, 4)",Preferred Dividends in Arrears
+dvpd,True,"NUMERIC(18, 4)",Cash Dividends Paid
+dvpdp,True,"NUMERIC(18, 4)",Dividends and Bonuses Paid Policyholders
+dvpibb,True,"NUMERIC(18, 4)",Depreciation (Accumulated) - Beginning Balance (Schedule VI)
+dvrpiv,True,"NUMERIC(18, 4)",Dividends Received from Permanent Investments
+dvrre,True,"NUMERIC(18, 4)",Development Revenue (Real Estate)
+dvsco,True,"NUMERIC(18, 4)",Dividends - Share Capital - Other
+dvt,True,"NUMERIC(18, 4)",Dividends - Total
+dxd2,True,"NUMERIC(18, 4)",Debt (excl Capitalized Leases) - Due in 2nd Year
+dxd3,True,"NUMERIC(18, 4)",Debt (excl Capitalized Leases) - Due in 3rd Year
+dxd4,True,"NUMERIC(18, 4)",Debt (excl Capitalized Leases) - Due in 4th Year
+dxd5,True,"NUMERIC(18, 4)",Debt (excl Capitalized Leases) - Due in 5th Year
+ea,True,"NUMERIC(18, 4)",Exchange Adjustments (Assets)
+ebit,True,"NUMERIC(18, 4)",Earnings Before Interest and Taxes
+ebitda,True,"NUMERIC(18, 4)",Earnings Before Interest
+eiea,True,"NUMERIC(18, 4)",Equity in Earnings - After-Tax
+emol,True,"NUMERIC(18, 4)",Directors'' Emoluments
+emp,True,"NUMERIC(18, 4)",Employees
+epsfi,True,"NUMERIC(18, 4)",Earnings Per Share (Diluted) - Including Extraordinary Items
+epsfx,True,"NUMERIC(18, 4)",Earnings Per Share (Diluted) - Excluding Extraordinary Items
+epspi,True,"NUMERIC(18, 4)",Earnings Per Share (Basic) - Including Extraordinary Items
+epspx,True,"NUMERIC(18, 4)",Earnings Per Share (Basic) - Excluding Extraordinary Items
+esopct,True,"NUMERIC(18, 4)",Common ESOP Obligation - Total
+esopdlt,True,"NUMERIC(18, 4)",ESOP Debt - Long Term
+esopnr,True,"NUMERIC(18, 4)",Preferred ESOP Obligation - Non-Redeemable
+esopr,True,"NUMERIC(18, 4)",Preferred ESOP Obligation - Redeemable
+esopt,True,"NUMERIC(18, 4)",Preferred ESOP Obligation - Total
+esub,True,"NUMERIC(18, 4)",Equity in Earnings - Unconsolidated Subsidiaries
+esubc,True,"NUMERIC(18, 4)",Equity in Net Loss - Earnings
+excadj,True,"NUMERIC(18, 4)",Exchange Adjustments (Liabilities)
+exre,True,"NUMERIC(18, 4)",Exchange Rate Effect
+fatb,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Buildings at Cost"
+fatc,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Construction in Progress at Cost"
+fatd,True,"NUMERIC(18, 4)",Fixed Assets and Investments - Disposals - Gain (Loss)
+fate,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Machinery and Equipment at Cost"
+fatl,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Leases at Cost"
+fatn,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Natural Resources at Cost"
+fato,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Other at Cost"
+fatp,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Land and Improvements at Cost"
+fca,True,"NUMERIC(18, 4)",Foreign Exchange Income (Loss)
+fdfr,True,"NUMERIC(18, 4)",Federal Funds Purchased
+fea,True,"NUMERIC(18, 4)",Foreign Exchange Assets
+fel,True,"NUMERIC(18, 4)",Foreign Exchange Liabilities
+ffo,True,"NUMERIC(18, 4)",Funds From Operations (REIT)
+ffs,True,"NUMERIC(18, 4)",Federal Funds Sold
+fiao,True,"NUMERIC(18, 4)",Financing Activities - Other
+finaco,True,"NUMERIC(19, 4)","Finance Division Other Current Assets, Total"
+finao,True,"NUMERIC(19, 4)","Finance Division Other Long-Term Assets, Total"
+fincf,True,"NUMERIC(18, 4)",Financing Activities - Net Cash Flow
+finch,True,"NUMERIC(19, 4)",Finance Division - Cash
+findlc,True,"NUMERIC(19, 4)",Finance Division Long-Term Debt  Current
+findlt,True,"NUMERIC(19, 4)",Finance Division Debt  Long-Term
+finivst,True,"NUMERIC(19, 4)",Finance Division  Short-Term Investments
+finlco,True,"NUMERIC(19, 4)","Finance Division Other Current Liabilities, Total"
+finlto,True,"NUMERIC(19, 4)","Finance Division Other Long Term Liabilities, Total"
+finnp,True,"NUMERIC(19, 4)",Finance Division Notes Payable
+finrecc,True,"NUMERIC(19, 4)",Finance Division  Current Receivables
+finreclt,True,"NUMERIC(19, 4)",Finance Division  Long-Term Receivables
+finrev,True,"NUMERIC(19, 4)",Finance Division Revenue
+finxint,True,"NUMERIC(19, 4)",Finance Division Interest Expense
+finxopr,True,"NUMERIC(19, 4)",Finance Division Operating Expense
+fopo,True,"NUMERIC(18, 4)",Funds from Operations - Other
+fopox,True,"NUMERIC(18, 4)",Funds from Operations - Other excluding Option Tax Benefit
+fopt,True,"NUMERIC(18, 4)",Funds From Operations - Total
+fsrco,True,"NUMERIC(18, 4)",Sources of Funds - Other
+fsrct,True,"NUMERIC(18, 4)",Sources of Funds - Total
+fuseo,True,"NUMERIC(18, 4)",Uses of Funds - Other
+fuset,True,"NUMERIC(18, 4)",Uses of Funds - Total
+gbbl,True,"NUMERIC(18, 4)",Group Benefits (Business Line)
+gdwl,True,"NUMERIC(18, 4)",Goodwill
+gdwlam,True,"NUMERIC(18, 4)",Goodwill Amortization
+gdwlia,True,"NUMERIC(18, 4)",Impairments of Goodwill After-tax
+gdwlid,True,"NUMERIC(18, 4)",Impairments of Goodwill Diluted EPS Effect
+gdwlieps,True,"NUMERIC(18, 4)",Impairments of Goodwill Basic EPS Effect
+gdwlip,True,"NUMERIC(18, 4)",Impairments of Goodwill Pretax
+geqrv,True,"NUMERIC(18, 4)",Grants - Equity Reserves
+gla,True,"NUMERIC(18, 4)",Gain/Loss After-tax
+glcea,True,"NUMERIC(18, 4)",Gain/Loss on Sale (Core Earnings Adjusted) After-tax
+glced,True,"NUMERIC(18, 4)",Gain/Loss on Sale (Core Earnings Adjusted) Diluted EPS
+glceeps,True,"NUMERIC(18, 4)",Gain/Loss on Sale (Core Earnings Adjusted) Basic EPS Effect
+glcep,True,"NUMERIC(18, 4)",Gain/Loss on Sale (Core Earnings Adjusted) Pretax
+gld,True,"NUMERIC(18, 4)",Gain/Loss Diluted EPS Effect
+gleps,True,"NUMERIC(18, 4)",Gain/Loss Basic EPS Effect
+gliv,True,"NUMERIC(19, 4)",Gains/Losses on investments
+glp,True,"NUMERIC(18, 4)",Gain/Loss Pretax
+govgr,True,"NUMERIC(18, 4)",Government Grants
+govtown,True,"NUMERIC(18, 4)",Percent of Gov''t Owned
+gp,True,"NUMERIC(18, 4)",Gross Profit (Loss)
+gphbl,True,"NUMERIC(18, 4)",Group Premiums - Health (Business Line)
+gplbl,True,"NUMERIC(18, 4)",Group Premiums - Life (Business Line)
+gpobl,True,"NUMERIC(18, 4)",Group Premiums - Other (Business Line)
+gprbl,True,"NUMERIC(18, 4)",Group Premiums - Retirement Benefits (Business Line)
+gptbl,True,"NUMERIC(18, 4)",Group Premiums - Total (Business Line)
+gwo,True,"NUMERIC(18, 4)",Goodwill Written Off
+hedgegl,True,"NUMERIC(18, 4)",Gain/Loss on Ineffective Hedges
+iaeq,True,"NUMERIC(18, 4)",Investment Assets - Equity Securities (Insurance)
+iaeqci,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Equity Securities (Cost)
+iaeqmi,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Equity Securities (Market)
+iafici,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Fixed Income Securities (Cost)
+iafxi,True,"NUMERIC(18, 4)",Investment Assets - Fixed Income Securities (Insurance)
+iafxmi,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Fixed Income Securities (Market)
+iali,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Listed Securities-Total
+ialoi,True,"NUMERIC(18, 4)",Investment Assets - Loans - Other (Insurance)
+ialti,True,"NUMERIC(18, 4)",Investment Assets - Loans - Total (Insurance)
+iamli,True,"NUMERIC(18, 4)",Investment Assets - Mortgage Loans (Insurance)
+iaoi,True,"NUMERIC(18, 4)",Investment Assets - Other (Insurance)
+iapli,True,"NUMERIC(18, 4)",Investment Assets - Policy Loans (Insurance)
+iarei,True,"NUMERIC(18, 4)",Investment Assets - Real Estate (Insurance)
+iasci,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Securities - Sundry (Cost)
+iasmi,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Securities - Sundry (Market)
+iassi,True,"NUMERIC(18, 4)",Investment Assets - Securities - Sundry (Insurance)
+iasti,True,"NUMERIC(18, 4)",Investment Assets - Securities - Total (Insurance)
+iatci,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Securities - Total (Cost)
+iati,True,"NUMERIC(18, 4)",Investment Assets - Total (Insurance)
+iatmi,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Securities - Total (Market)
+iaui,True,"NUMERIC(18, 4)",Investment Assets (Insurance) - Unlisted Securities - Total
+ib,True,"NUMERIC(18, 4)",Income Before Extraordinary Items
+ibadj,True,"NUMERIC(18, 4)",Income Before Extraordinary Items - Adjusted for Common Stock Equivalents
+ibbl,True,"NUMERIC(18, 4)",Individual Benefits (Business Line)
+ibc,True,"NUMERIC(18, 4)",Income Before Extraordinary Items (Cash Flow)
+ibcom,True,"NUMERIC(18, 4)",Income Before Extraordinary Items - Available for Common
+ibki,True,"NUMERIC(18, 4)",Investment Banking Income
+ibmii,True,"NUMERIC(18, 4)",Income before Extraordinary Items and Noncontrolling Interests
+icapt,True,"NUMERIC(18, 4)",Invested Capital - Total
+idiis,True,"NUMERIC(18, 4)",Interest and Dividend Income - Investment Securities
+idilb,True,"NUMERIC(18, 4)",Interest and Dividend Income - Loans/Claims/Advances - Banks
+idilc,True,"NUMERIC(18, 4)",Interest and Dividend Income - Loans/Claims/Advances - Customers
+idis,True,"NUMERIC(18, 4)",Interest and Dividend Income - Sundry
+idist,True,"NUMERIC(18, 4)",Interest and Dividend Income - Short-Term Investments
+idit,True,"NUMERIC(18, 4)",Interest and Related Income - Total
+idits,True,"NUMERIC(18, 4)",Interest and Dividend Income - Trading Securities
+iire,True,"NUMERIC(18, 4)",Investment Income (Real Estate)
+initb,True,"NUMERIC(18, 4)",Income - Non-interest - Total (Bank)
+intan,True,"NUMERIC(18, 4)",Intangible Assets - Total
+intano,True,"NUMERIC(18, 4)",Other Intangibles
+intc,True,"NUMERIC(18, 4)",Interest Capitalized
+intpn,True,"NUMERIC(18, 4)",Interest Paid - Net
+invch,True,"NUMERIC(18, 4)",Inventory - Decrease (Increase)
+invfg,True,"NUMERIC(18, 4)",Inventories - Finished Goods
+invo,True,"NUMERIC(18, 4)",Inventories - Other
+invofs,True,"NUMERIC(18, 4)",Inventory/Stock - Other
+invreh,True,"NUMERIC(18, 4)",Inventory/Stock - Real Estate Held for Development
+invrei,True,"NUMERIC(18, 4)",Inventory/Stock - Real Estate Under Development
+invres,True,"NUMERIC(18, 4)",Inventory/Stock - Real Estate Held for Sale
+invrm,True,"NUMERIC(18, 4)",Inventories - Raw Materials
+invt,True,"NUMERIC(18, 4)",Inventories - Total
+invwip,True,"NUMERIC(18, 4)",Inventories - Work In Process
+iobd,True,"NUMERIC(18, 4)",Income - Other (Broker Dealer)
+ioi,True,"NUMERIC(18, 4)",Income - Other (Insurance)
+iore,True,"NUMERIC(18, 4)",Income - Other (Real Estate)
+ip,True,"NUMERIC(18, 4)",Investment Property
+ipabl,True,"NUMERIC(18, 4)",Individual Premiums - Annuity (Business Line)
+ipc,True,"NUMERIC(18, 4)",Investment Property (Cost)
+iphbl,True,"NUMERIC(18, 4)",Individual Premiums - Health (Business Line)
+iplbl,True,"NUMERIC(18, 4)",Individual Premiums - Life (Business Line)
+ipobl,True,"NUMERIC(18, 4)",Individual Premiums - Other (Business Line)
+iptbl,True,"NUMERIC(18, 4)",Individual Premiums - Total (Business Line)
+ipti,True,"NUMERIC(18, 4)",Insurance Premiums - Total (Insurance)
+ipv,True,"NUMERIC(18, 4)",Investment Property (Valuation)
+irei,True,"NUMERIC(18, 4)",Interest and Related Income - Reinsurance (Insurance)
+irent,True,"NUMERIC(18, 4)",Rental Income
+irii,True,"NUMERIC(18, 4)",Interest and Related Income (Insurance)
+irli,True,"NUMERIC(18, 4)",Interest and Related Income - Life (Insurance)
+irnli,True,"NUMERIC(18, 4)",Interest and Related Income - Non-Life (Insurance)
+irsi,True,"NUMERIC(18, 4)",Interest and Related Income - Sundry (Insurance)
+iseq,True,"NUMERIC(18, 4)",Investment Securities - Equity
+iseqc,True,"NUMERIC(18, 4)",Investment Securities - Equity (Cost)
+iseqm,True,"NUMERIC(18, 4)",Investment Securities - Equity (Market)
+isfi,True,"NUMERIC(18, 4)",Investment Securities - Fixed Income
+isfxc,True,"NUMERIC(18, 4)",Investment Securities - Fixed Income (Cost)
+isfxm,True,"NUMERIC(18, 4)",Investment Securities - Fixed Income (Market)
+isgr,True,"NUMERIC(18, 4)",Investment Securities - Gain (Loss) - Realized
+isgt,True,"NUMERIC(18, 4)",Investment Securities - Gain (Loss) - Total
+isgu,True,"NUMERIC(18, 4)",Investment Securities - Gain (Loss) - Unrealized
+islg,True,"NUMERIC(18, 4)",Investment Securities - Local Governments
+islgc,True,"NUMERIC(18, 4)",Investment Securities - Local Governments (Cost)
+islgm,True,"NUMERIC(18, 4)",Investment Securities - Local Governments (Market)
+islt,True,"NUMERIC(18, 4)",Investment Securities - Listed - Total
+isng,True,"NUMERIC(18, 4)",Investment Securities - National Governments
+isngc,True,"NUMERIC(18, 4)",Investment Securities - National Governments (Cost)
+isngm,True,"NUMERIC(18, 4)",Investment Securities - National Governments (Market)
+isotc,True,"NUMERIC(18, 4)",Invetsment Securities - Other (Cost)
+isoth,True,"NUMERIC(18, 4)",Investment Securities - Other
+isotm,True,"NUMERIC(18, 4)",Invetsment Securities - Other (Market)
+issc,True,"NUMERIC(18, 4)",Investment Securities - Sundry (Cost)
+issm,True,"NUMERIC(18, 4)",Investment Securities - Sundry (Market)
+issu,True,"NUMERIC(18, 4)",Investment Securities - Sundry
+ist,True,"NUMERIC(18, 4)",Investment Securities -Total
+istc,True,"NUMERIC(18, 4)",Investment Securities - Total (Cost)
+istm,True,"NUMERIC(18, 4)",Investment Securities - Total (Market)
+isut,True,"NUMERIC(18, 4)",Investment Securities - Unlisted - Total
+itcb,True,"NUMERIC(18, 4)",Investment Tax Credit (Balance Sheet)
+itcc,True,"NUMERIC(18, 4)",Investment Tax Credit - Net (Cash Flow) - Utility
+itci,True,"NUMERIC(18, 4)",Investment Tax Credit (Income Account)
+ivaco,True,"NUMERIC(18, 4)",Investing Activities - Other
+ivaeq,True,"NUMERIC(18, 4)",Investment and Advances - Equity
+ivao,True,"NUMERIC(18, 4)",Investment and Advances - Other
+ivch,True,"NUMERIC(18, 4)",Increase in Investments
+ivgod,True,"NUMERIC(18, 4)",Investments Grants and Other Deductions
+ivi,True,"NUMERIC(18, 4)",Investment Income - Total (Insurance)
+ivncf,True,"NUMERIC(18, 4)",Investing Activities - Net Cash Flow
+ivpt,True,"NUMERIC(18, 4)",Investments - Permanent - Total
+ivst,True,"NUMERIC(18, 4)",Short-Term Investments - Total
+ivstch,True,"NUMERIC(18, 4)",Short-Term Investments - Change
+lcabg,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Banks and Government - Total
+lcacl,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Commercial
+lcacr,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Consumer
+lcag,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Government
+lcal,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Lease
+lcalt,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Long-Term (Banks)
+lcam,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Mortgage
+lcao,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Other
+lcast,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Short-Term - Banks
+lcat,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Total
+lco,True,"NUMERIC(18, 4)",Current Liabilities - Other - Total
+lcox,True,"NUMERIC(18, 4)",Current Liabilities - Other - Sundry
+lcoxar,True,"NUMERIC(18, 4)",Current Liabilities - Other - Total As Reported
+lcoxdr,True,"NUMERIC(18, 4)",Current Liabilities - Other - Excluding Deferred Revenue
+lct,True,"NUMERIC(18, 4)",Current Liabilities - Total
+lcuacu,True,"NUMERIC(18, 4)",Loans/Claims/Advances - Customer - Total
+li,True,"NUMERIC(18, 4)",Leasing Income
+lif,True,"NUMERIC(18, 4)",Life Insurance in Force
+lifr,True,"NUMERIC(18, 4)",LIFO Reserve
+lifrp,True,"NUMERIC(19, 4)",LIFO Reserve - Prior
+lloml,True,"NUMERIC(18, 4)",LDC Loans Outstanding - Medium and Long-Term
+lloo,True,"NUMERIC(18, 4)",LDC Loans Outstanding - Other
+llot,True,"NUMERIC(18, 4)",LDC Loans Outstanding - Total
+llrci,True,"NUMERIC(18, 4)",Loan Loss Recoveries - Credited to Income
+llrcr,True,"NUMERIC(18, 4)",Loan Loss Recoveries - Credited to Reserves
+llwoci,True,"NUMERIC(18, 4)",Loan Loss Written Off - Charged to Income
+llwocr,True,"NUMERIC(18, 4)",Loan Loss Written Off - Charged to Reserves
+lno,True,"NUMERIC(18, 4)",Liabilities Netting & Other Adjustments
+lo,True,"NUMERIC(18, 4)",Liabilities - Other - Total
+lol2,True,"NUMERIC(18, 4)",Liabilities Level2 (Observable)
+loxdr,True,"NUMERIC(18, 4)",Liabilities - Other - Excluding Deferred Revenue
+lqpl1,True,"NUMERIC(18, 4)",Liabilities Level1 (Quoted Prices)
+lrv,True,"NUMERIC(18, 4)",Legal Reserves
+ls,True,"NUMERIC(18, 4)",Liabilities - Other - Sundry
+lse,True,"NUMERIC(18, 4)",Liabilities and Stockholders Equity - Total
+lst,True,"NUMERIC(18, 4)",Life Insurance Surrenders and Terminations
+lt,True,"NUMERIC(18, 4)",Liabilities - Total
+lul3,True,"NUMERIC(18, 4)",Liabilities Level3 (Unobservable)
+mib,True,"NUMERIC(18, 4)",Noncontrolling Interest (Balance Sheet)
+mibn,True,"NUMERIC(18, 4)",Noncontrolling Interests - Nonredeemable - Balance Sheet
+mibt,True,"NUMERIC(18, 4)",Noncontrolling Interests - Total - Balance Sheet
+mii,True,"NUMERIC(18, 4)",Noncontrolling Interest (Income Account)
+mrc1,True,"NUMERIC(18, 4)",Rental Commitments - Minimum - 1st Year
+mrc2,True,"NUMERIC(18, 4)",Rental Commitments - Minimum - 2nd Year
+mrc3,True,"NUMERIC(18, 4)",Rental Commitments - Minimum - 3rd Year
+mrc4,True,"NUMERIC(18, 4)",Rental Commitments - Minimum - 4th Year
+mrc5,True,"NUMERIC(18, 4)",Rental Commitments - Minimum - 5th Year
+mrct,True,"NUMERIC(18, 4)",Rental Commitments - Minimum - 5 Year Total
+mrcta,True,"NUMERIC(18, 4)",Thereafter Portion of Leases
+msa,True,"NUMERIC(18, 4)",Marketable Securities Adjustment
+msvrv,True,"NUMERIC(18, 4)",Mandatory Securities Valuation Reserve (Statutory)
+mtl,True,"NUMERIC(18, 4)",Loans From Securities Finance Companies for Margin Transactions
+nat,True,"NUMERIC(18, 4)",Nonadmitted Assets - Total (Statutory)
+nco,True,"NUMERIC(18, 4)",Net Charge-Offs
+nfsr,True,"NUMERIC(18, 4)",Non-Financial Services Revenue
+ni,True,"NUMERIC(18, 4)",Net Income (Loss)
+niadj,True,"NUMERIC(18, 4)",Net Income Adjusted for Common/Ordinary Stock (Capital) Equivalents
+nieci,True,"NUMERIC(18, 4)",Net Income Effect Capitalized Interest
+niint,True,"NUMERIC(18, 4)",Net Interest Income
+niintpfc,True,"NUMERIC(18, 4)",Pro Forma Net Interest Income - Current
+niintpfp,True,"NUMERIC(18, 4)",Pro Forma Net Interest Income - Prior
+niit,True,"NUMERIC(18, 4)",Net Interest Income (Tax Equivalent)
+nim,True,"NUMERIC(18, 4)",Net Interest Margin
+nio,True,"NUMERIC(18, 4)",Net Items - Other
+nipfc,True,"NUMERIC(18, 4)",Pro Forma Net Income - Current
+nipfp,True,"NUMERIC(18, 4)",Pro Forma Net Income - Prior
+nit,True,"NUMERIC(18, 4)",Net Item - Total
+nits,True,"NUMERIC(18, 4)",Net Income - Total (Statutory)
+nopi,True,"NUMERIC(18, 4)",Nonoperating Income (Expense)
+nopio,True,"NUMERIC(18, 4)",Nonoperating Income (Expense) - Other
+np,True,"NUMERIC(18, 4)",Notes Payable - Short-Term Borrowings
+npanl,True,"NUMERIC(18, 4)",Nonperforming Assets - Nonaccrual Loans
+npaore,True,"NUMERIC(18, 4)",Nonperforming Assets - Other Real Estate Owned
+nparl,True,"NUMERIC(18, 4)",Nonperforming Assets - Restructured Loans
+npat,True,"NUMERIC(18, 4)",Nonperforming Assets - Total
+nrtxt,True,"NUMERIC(18, 4)",Nonrecurring Income Taxes After-tax
+nrtxtd,True,"NUMERIC(18, 4)",Nonrecurring Income Tax Diluted EPS Effect
+nrtxteps,True,"NUMERIC(18, 4)",Nonrecurring Income Tax Basic EPS Effect
+oancf,True,"NUMERIC(18, 4)",Operating Activities - Net Cash Flow
+ob,True,"NUMERIC(18, 4)",Order Backlog
+oiadp,True,"NUMERIC(18, 4)",Operating Income After Depreciation
+oibdp,True,"NUMERIC(18, 4)",Operating Income Before Depreciation
+opeps,True,"NUMERIC(18, 4)",Earnings Per Share from Operations
+opili,True,"NUMERIC(18, 4)",Operating Income - Life
+opincar,True,"NUMERIC(18, 4)",Operating Income - As Reported
+opini,True,"NUMERIC(18, 4)",Operating Income - Non-Life
+opioi,True,"NUMERIC(18, 4)",Operating Income - Other
+opiri,True,"NUMERIC(18, 4)",Operating Income - Reinsurance
+opiti,True,"NUMERIC(18, 4)",Operating Income - Total
+oprepsx,True,"NUMERIC(18, 4)",Earnings Per Share - Diluted - from Operations
+optca,True,"NUMERIC(18, 4)",Options - Cancelled (-)
+optdr,True,"NUMERIC(18, 4)",Dividend Rate - Assumption (%)
+optex,True,"NUMERIC(18, 4)",Options Exercisable (000)
+optexd,True,"NUMERIC(18, 4)",Options - Exercised (-)
+optfvgr,True,"NUMERIC(18, 4)",Options - Fair Value of Options Granted
+optgr,True,"NUMERIC(18, 4)",Options - Granted
+optlife,True,"NUMERIC(18, 4)",Life of Options - Assumption (# yrs)
+optosby,True,"NUMERIC(18, 4)",Options Outstanding - Beg of Year
+optosey,True,"NUMERIC(18, 4)",Options Outstanding - End of Year
+optprcby,True,"NUMERIC(18, 4)",Options Outstanding Beg of Year - Price
+optprcca,True,"NUMERIC(18, 4)",Options Cancelled - Price
+optprcex,True,"NUMERIC(18, 4)",Options Exercised - Price
+optprcey,True,"NUMERIC(18, 4)",Options Outstanding End of Year - Price
+optprcgr,True,"NUMERIC(18, 4)",Options Granted - Price
+optprcwa,True,"NUMERIC(18, 4)",Options Exercisable - Weighted Avg Price
+optrfr,True,"NUMERIC(18, 4)",Risk Free Rate - Assumption (%)
+optvol,True,"NUMERIC(18, 4)",Volatility - Assumption (%)
+palr,True,"NUMERIC(18, 4)",Premiums Assumed - Life
+panlr,True,"NUMERIC(18, 4)",Premiums Assumed - Nonlife
+patr,True,"NUMERIC(18, 4)",Premiums Assumed - Total
+pcl,True,"NUMERIC(18, 4)",Provision - Credit Losses (Income Account)
+pclr,True,"NUMERIC(18, 4)",Premiums Ceded - Life
+pcnlr,True,"NUMERIC(18, 4)",Premiums Ceded - Nonlife
+pctr,True,"NUMERIC(18, 4)",Premiums Ceded - Total
+pdvc,True,"NUMERIC(18, 4)",Cash Dividends on Preferred/Preference Stock (Cash Flow)
+pi,True,"NUMERIC(18, 4)",Pretax Income
+pidom,True,"NUMERIC(18, 4)",Pretax Income - Domestic
+pifo,True,"NUMERIC(18, 4)",Pretax Income - Foreign
+pll,True,"NUMERIC(18, 4)",Provision for Loan/Asset Losses
+pltbl,True,"NUMERIC(18, 4)",Premiums - Life - Total (Business Line)
+pnca,True,"NUMERIC(18, 4)",Core Pension Adjustment
+pncad,True,"NUMERIC(18, 4)",Core Pension Adjustment Diluted EPS Effect
+pncaeps,True,"NUMERIC(18, 4)",Core Pension Adjustment Basic EPS Effect
+pncia,True,"NUMERIC(18, 4)",Core Pension Interest Adjustment After-tax
+pncid,True,"NUMERIC(18, 4)",Core Pension Interest Adjustment Diluted EPS Effect
+pncieps,True,"NUMERIC(18, 4)",Core Pension Interest Adjustment Basic EPS Effect
+pncip,True,"NUMERIC(18, 4)",Core Pension Interest Adjustment Pretax
+pncwia,True,"NUMERIC(18, 4)",Core Pension w/o Interest Adjustment After-tax
+pncwid,True,"NUMERIC(18, 4)",Core Pension w/o Interest Adjustment Diluted EPS Effect
+pncwieps,True,"NUMERIC(18, 4)",Core Pension w/o Interest Adjustment Basic EPS Effect
+pncwip,True,"NUMERIC(18, 4)",Core Pension w/o Interest Adjustment Pretax
+pnlbl,True,"NUMERIC(18, 4)",Premiums - Nonlife - Total (Business Line)
+pnli,True,"NUMERIC(18, 4)",Premiums Written - Non-Life
+pnrsho,True,"NUMERIC(18, 4)",Nonred Pfd Shares Outs (000)
+pobl,True,"NUMERIC(18, 4)",Premiums - Other (Business Line)
+ppcbl,True,"NUMERIC(18, 4)",Personal Property and Casualty Claims (Business Line)
+ppegt,True,"NUMERIC(18, 4)","Property, Plant and Equipment - Total (Gross)"
+ppenb,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Buildings (Net)"
+ppenc,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Construction in Progress (Net)"
+ppenli,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Land and Improvements (Net)"
+ppenls,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Leases (Net)"
+ppenme,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Machinery and Equipment (Net)"
+ppennr,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Natural Resources (Net)"
+ppeno,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Other (Net)"
+ppent,True,"NUMERIC(18, 4)","Property, Plant and Equipment - Total (Net)"
+ppevbb,True,"NUMERIC(18, 4)","Property, Plant and Equipment - Beginning Balance (Schedule V)"
+ppeveb,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Ending Balance (Schedule V)"
+ppevo,True,"NUMERIC(18, 4)","Property, Plant, and Equipment - Other Changes (Schedule V)"
+ppevr,True,"NUMERIC(18, 4)","Property, Plant and Equipment - Retirements (Schedule V)"
+pppabl,True,"NUMERIC(18, 4)",Personal Property and Casualty Premiums - Automobile (Business Line)
+ppphbl,True,"NUMERIC(18, 4)",Personal Property and Casualty Premiums - Homeowners (Business Line)
+pppobl,True,"NUMERIC(18, 4)",Personal Property and Casualty Premiums - Other (Business Line)
+ppptbl,True,"NUMERIC(18, 4)",Personal Property & Casualty Premiums - Total (Business Line)
+prc,True,"NUMERIC(18, 4)",Participation Rights Certificates
+prca,True,"NUMERIC(18, 4)",Core Post Retirement Adjustment
+prcad,True,"NUMERIC(18, 4)",Core Post Retirement Adjustment Diluted EPS Effect
+prcaeps,True,"NUMERIC(18, 4)",Core Post Retirement Adjustment Basic EPS Effect
+prebl,True,"NUMERIC(18, 4)",Premiums - Reinsurance (Business Line)
+pri,True,"NUMERIC(18, 4)",Premiums Written - Reinsurance
+prodv,True,"NUMERIC(18, 4)",Proposed Dividends
+prsho,True,"NUMERIC(18, 4)",Redeem Pfd Shares Outs (000)
+prstkc,True,"NUMERIC(18, 4)",Purchase of Common and Preferred Stock
+prstkcc,True,"NUMERIC(18, 4)",Purchase of Common Stock (Cash Flow)
+prstkpc,True,"NUMERIC(18, 4)",Purchase of Preferred/Preference Stock (Cash Flow)
+prvt,True,"NUMERIC(18, 4)",Policy Reserves - Total (Statutory)
+pstk,True,"NUMERIC(18, 4)",Preferred/Preference Stock (Capital) - Total
+pstkc,True,"NUMERIC(18, 4)",Preferred Stock - Convertible
+pstkl,True,"NUMERIC(18, 4)",Preferred Stock - Liquidating Value
+pstkn,True,"NUMERIC(18, 4)",Preferred/Preference Stock - Nonredeemable
+pstkr,True,"NUMERIC(18, 4)",Preferred/Preference Stock - Redeemable
+pstkrv,True,"NUMERIC(18, 4)",Preferred Stock - Redemption Value
+ptbl,True,"NUMERIC(18, 4)",Premiums - Total (Business Line)
+ptran,True,"NUMERIC(18, 4)",Principal Transactions
+pvcl,True,"NUMERIC(18, 4)",Provision - Credit Losses (Balance Sheet)
+pvo,True,"NUMERIC(18, 4)",Provision - Other
+pvon,True,"NUMERIC(18, 4)",Provisions - Other (Net)
+pvpl,True,"NUMERIC(18, 4)",Provision - Pension Liabilities
+pvt,True,"NUMERIC(18, 4)",Provisions - Total
+pwoi,True,"NUMERIC(18, 4)",Premiums Written - Other
+radp,True,"NUMERIC(18, 4)",Reinsurance Assets - Deposits and Other (Insurance)
+ragr,True,"NUMERIC(18, 4)",Resale Agreements
+rari,True,"NUMERIC(18, 4)",Reinsurance Assets - Receivable/Debtors (Insurance)
+rati,True,"NUMERIC(18, 4)",Reinsurance Assets - Total (Insurance)
+rca,True,"NUMERIC(18, 4)",Restructuring Costs After-tax
+rcd,True,"NUMERIC(18, 4)",Restructuring Costs Diluted EPS Effect
+rceps,True,"NUMERIC(18, 4)",Restructuring Costs Basic EPS Effect
+rcl,True,"NUMERIC(18, 4)",Reserves for Credit Losses (Assets)
+rcp,True,"NUMERIC(18, 4)",Restructuring Costs Pretax
+rdip,True,"NUMERIC(18, 4)",In Process R&D Expense
+rdipa,True,"NUMERIC(18, 4)",In Process R&D Expense After-tax
+rdipd,True,"NUMERIC(18, 4)",In Process R&D Expense Diluted EPS Effect
+rdipeps,True,"NUMERIC(18, 4)",In Process R&D Expense Basic EPS Effect
+rdp,True,"NUMERIC(18, 4)",Regulatory Deposits
+re,True,"NUMERIC(18, 4)",Retained Earnings
+rea,True,"NUMERIC(18, 4)",Retained Earnings - Restatement
+reajo,True,"NUMERIC(18, 4)",Retained Earnings - Other Adjustments
+recch,True,"NUMERIC(18, 4)",Accounts Receivable - Decrease (Increase)
+recco,True,"NUMERIC(18, 4)",Receivables - Current - Other
+recd,True,"NUMERIC(18, 4)",Receivables - Estimated Doubtful
+rect,True,"NUMERIC(18, 4)",Receivables - Total
+recta,True,"NUMERIC(18, 4)",Retained Earnings - Cumulative Translation Adjustment
+rectr,True,"NUMERIC(18, 4)",Receivables - Trade
+recub,True,"NUMERIC(18, 4)",Unbilled Receivables
+ret,True,"NUMERIC(18, 4)",Total RE Property
+reuna,True,"NUMERIC(18, 4)",Retained Earnings - Unadjusted
+reunr,True,"NUMERIC(18, 4)",Retained Earnings - Unrestricted
+revt,True,"NUMERIC(18, 4)",Revenue - Total
+ris,True,"NUMERIC(18, 4)",Revenue/Income - Sundry
+rll,True,"NUMERIC(18, 4)",Reserve for Loan/Asset Losses
+rlo,True,"NUMERIC(18, 4)",Reinsurance Liabilities - Other
+rlp,True,"NUMERIC(18, 4)",Reinsurance Liabilities - Payables/Creditors
+rlri,True,"NUMERIC(18, 4)",Reinsurers'' Liability for Reserves (Insurance)
+rlt,True,"NUMERIC(18, 4)",Reinsurance Liabilities - Total
+rmum,True,"NUMERIC(18, 4)",Auditors'' Remuneraton
+rpag,True,"NUMERIC(18, 4)",Repurchase Agreements
+rra,True,"NUMERIC(18, 4)",Reversal - Restructruring/Acquisition Aftertax
+rrd,True,"NUMERIC(18, 4)",Reversal - Restructuring/Acq Diluted EPS Effect
+rreps,True,"NUMERIC(18, 4)",Reversal - Restructuring/Acq Basic EPS Effect
+rrp,True,"NUMERIC(18, 4)",Reversal - Restructruring/Acquisition Pretax
+rstche,True,"NUMERIC(19, 4)",Restricted Cash & Investments - Current
+rstchelt,True,"NUMERIC(19, 4)",Long-Term Restricted Cash & Investments
+rvbci,True,"NUMERIC(18, 4)",Reserves for Benefits - Life - Claims (Insurance)
+rvbpi,True,"NUMERIC(18, 4)",Reserves for Benefits - Life - Policy (Insurance)
+rvbti,True,"NUMERIC(18, 4)",Reserves for Benefits - Life - Total (Insurance)
+rvdo,True,"NUMERIC(18, 4)",Reserves - Distributable - Other
+rvdt,True,"NUMERIC(18, 4)",Reserves - Distributable - Total
+rveqt,True,"NUMERIC(18, 4)",Equity Reserves - Total
+rvlrv,True,"NUMERIC(18, 4)",Revaluation Reserve
+rvno,True,"NUMERIC(18, 4)",Reserves - Nondistributable - Other
+rvnt,True,"NUMERIC(18, 4)",Reserves - Nondistributable - Total
+rvri,True,"NUMERIC(18, 4)",Reserves - Reinsurance (Insurance)
+rvsi,True,"NUMERIC(18, 4)",Reserves - Sundry (Insurance)
+rvti,True,"NUMERIC(18, 4)",Reserves - Total
+rvtxr,True,"NUMERIC(18, 4)",Reserves - Tax-Regulated
+rvupi,True,"NUMERIC(18, 4)",Reserves for Unearned Premiums (Insurance)
+rvutx,True,"NUMERIC(18, 4)",Reserves - Untaxed
+saa,True,"NUMERIC(18, 4)",Separate Account Assets
+sal,True,"NUMERIC(18, 4)",Separate Account Liabilities
+sale,True,"NUMERIC(18, 4)",Sales/Turnover (Net)
+salepfc,True,"NUMERIC(18, 4)",Pro Forma Net Sales - Current Year
+salepfp,True,"NUMERIC(18, 4)",Pro Forma Net Sales - Prior Year
+sbdc,True,"NUMERIC(18, 4)",Securities Borrowed and Deposited by Customers
+sc,True,"NUMERIC(18, 4)",Securities In Custody
+sco,True,"NUMERIC(18, 4)",Share Capital - Other
+scstkc,True,"NUMERIC(18, 4)",Sale of Common Stock (Cash Flow)
+secu,True,"NUMERIC(18, 4)",Securities Gains (Losses) - Unrealized
+seq,True,"NUMERIC(18, 4)",Stockholders Equity - Parent
+seqo,True,"NUMERIC(18, 4)",Other Stockholders- Equity Adjustments
+seta,True,"NUMERIC(18, 4)",Settlement (Litigation/Insurance) After-tax
+setd,True,"NUMERIC(18, 4)",Settlement (Litigation/Insurance) Diluted EPS Effect
+seteps,True,"NUMERIC(18, 4)",Settlement (Litigation/Insurance) Basic EPS Effect
+setp,True,"NUMERIC(18, 4)",Settlement (Litigation/Insurance) Pretax
+siv,True,"NUMERIC(18, 4)",Sale of Investments
+spce,True,"NUMERIC(18, 4)",S&P Core Earnings
+spced,True,"NUMERIC(18, 4)",S&P Core Earnings EPS Diluted
+spceeps,True,"NUMERIC(18, 4)",S&P Core Earnings EPS Basic
+spi,True,"NUMERIC(18, 4)",Special Items
+spid,True,"NUMERIC(18, 4)",Other Special Items Diluted EPS Effect
+spieps,True,"NUMERIC(18, 4)",Other Special Items Basic EPS Effect
+spioa,True,"NUMERIC(18, 4)",Other Special Items After-tax
+spiop,True,"NUMERIC(18, 4)",Other Special Items Pretax
+sppe,True,"NUMERIC(18, 4)",Sale of Property
+sppiv,True,"NUMERIC(18, 4)","Sale of Property, Plant and Equipment and Investments - Gain (Loss)"
+spstkc,True,"NUMERIC(18, 4)",Sale of Preferred/Preference Stock (Cash Flow)
+sret,True,"NUMERIC(18, 4)",Gain/Loss on Sale of Property
+srt,True,"NUMERIC(18, 4)",Surplus - Total (Statutory)
+ssnp,True,"NUMERIC(18, 4)",Securities Sold Not Yet Purchased
+sstk,True,"NUMERIC(18, 4)",Sale of Common and Preferred Stock
+stbo,True,"NUMERIC(18, 4)",Short-Term Borrowings - Other
+stio,True,"NUMERIC(18, 4)",Short-Term Investments - Other
+stkco,True,"NUMERIC(18, 4)",Stock Compensation Expense
+stkcpa,True,"NUMERIC(18, 4)",After-tax stock compensation
+tdc,True,"NUMERIC(18, 4)",Deferred Income Taxes - Net (Cash Flow)
+tdscd,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Corporate Debt
+tdsce,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Corporate Equity
+tdsg,True,"NUMERIC(18, 4)",Trading/Dealing Securities - Gain (Loss)
+tdslg,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Local Governments
+tdsmm,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Money Market
+tdsng,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - National Governments
+tdso,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Other
+tdss,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Sundry
+tdst,True,"NUMERIC(18, 4)",Trading/Dealing Account Securities - Total
+teq,True,"NUMERIC(18, 4)",Stockholders Equity - Total
+tf,True,"NUMERIC(18, 4)",Trust Fees
+tfva,True,"NUMERIC(18, 4)",Total Fair Value Assets
+tfvce,True,"NUMERIC(18, 4)",Total Fair Value Changes including Earnings
+tfvl,True,"NUMERIC(18, 4)",Total Fair Value Liabilities
+tie,True,"NUMERIC(18, 4)",Interest Expense - Total (Financial Services)
+tii,True,"NUMERIC(18, 4)",Interest Income - Total (Financial Services)
+tlcf,True,"NUMERIC(18, 4)",Tax Loss Carry Forward
+transa,True,"NUMERIC(18, 4)",Cumulative Translation Adjustment
+tsa,True,"NUMERIC(18, 4)",Treasury Stock (Assets)
+tsafc,True,"NUMERIC(18, 4)",Total Sources/Applications of Funds (Cash Flow)
+tso,True,"NUMERIC(18, 4)",Treasury Stock - Other Share Capital
+tstk,True,"NUMERIC(18, 4)",Treasury Stock - Total (All Capital)
+tstkc,True,"NUMERIC(18, 4)",Treasury Stock - Common
+tstkme,True,"NUMERIC(18, 4)",Treasury Stock Book Value - Memo Entry
+tstkn,True,"NUMERIC(18, 4)",Treasury Stock - Number of Common Shares
+tstkp,True,"NUMERIC(18, 4)",Treasury Stock - Preferrred
+txach,True,"NUMERIC(18, 4)",Income Taxes - Accrued - Increase/(Decrease)
+txbco,True,"NUMERIC(18, 4)",Excess Tax Benefit Stock Options - Cash Flow Operating
+txbcof,True,"NUMERIC(18, 4)",Excess Tax Benefit of Stock Options - Cash Flow Financing
+txc,True,"NUMERIC(18, 4)",Income Taxes - Current
+txdb,True,"NUMERIC(18, 4)",Deferred Taxes (Balance Sheet)
+txdba,True,"NUMERIC(18, 4)",Deferred Tax Asset - Long Term
+txdbca,True,"NUMERIC(18, 4)",Deferred Tax Asset - Current
+txdbcl,True,"NUMERIC(18, 4)",Deferred Tax Liability - Current
+txdc,True,"NUMERIC(18, 4)",Deferred Taxes (Cash Flow)
+txdfed,True,"NUMERIC(18, 4)",Deferred Taxes-Federal
+txdfo,True,"NUMERIC(18, 4)",Deferred Taxes-Foreign
+txdi,True,"NUMERIC(18, 4)",Income Taxes - Deferred
+txditc,True,"NUMERIC(18, 4)",Deferred Taxes and Investment Tax Credit
+txds,True,"NUMERIC(18, 4)",Deferred Taxes-State
+txeqa,True,"NUMERIC(18, 4)",Tax - Equivalent Adjustment
+txeqii,True,"NUMERIC(18, 4)",Tax - Equivalent Interest Income (Gross)
+txfed,True,"NUMERIC(18, 4)",Income Taxes - Federal
+txfo,True,"NUMERIC(18, 4)",Income Taxes - Foreign
+txndb,True,"NUMERIC(18, 4)",Net Deferred Tax Asset (Liab) - Total
+txndba,True,"NUMERIC(18, 4)",Net Deferred Tax Asset
+txndbl,True,"NUMERIC(18, 4)",Net Deferred Tax Liability
+txndbr,True,"NUMERIC(18, 4)",Deferred Tax Residual
+txo,True,"NUMERIC(18, 4)",Income Taxes - Other
+txp,True,"NUMERIC(18, 4)",Income Taxes Payable
+txpd,True,"NUMERIC(18, 4)",Income Taxes Paid
+txr,True,"NUMERIC(18, 4)",Income Tax Refund
+txs,True,"NUMERIC(18, 4)",Income Taxes - State
+txt,True,"NUMERIC(18, 4)",Income Taxes - Total
+txtubadjust,True,"NUMERIC(18, 4)",Other Unrecog Tax Benefit Adj.
+txtubbegin,True,"NUMERIC(18, 4)",Unrecog. Tax Benefits - Beg of Year
+txtubend,True,"NUMERIC(18, 4)",Unrecog. Tax Benefits - End of Year
+txtubmax,True,"NUMERIC(18, 4)",Chg. In Unrecog. Tax Benefits - Max
+txtubmin,True,"NUMERIC(18, 4)",Chg. In Unrecog. Tax Benefits - Min
+txtubposdec,True,"NUMERIC(18, 4)",Decrease- Current Tax Positions
+txtubposinc,True,"NUMERIC(18, 4)",Increase- Current Tax Positions
+txtubpospdec,True,"NUMERIC(18, 4)",Decrease- Prior Tax Positions
+txtubpospinc,True,"NUMERIC(18, 4)",Increase- Prior Tax Positions
+txtubsettle,True,"NUMERIC(18, 4)",Settlements with Tax Authorities
+txtubsoflimit,True,"NUMERIC(18, 4)",Lapse of Statute of Limitations
+txtubtxtr,True,"NUMERIC(18, 4)",Impact on Effective Tax Rate
+txtubxintbs,True,"NUMERIC(18, 4)",Interest & Penalties Accrued - B/S
+txtubxintis,True,"NUMERIC(18, 4)",Interest & Penalties Reconized - I/S
+txva,True,"NUMERIC(18, 4)",Value Added Taxes
+txw,True,"NUMERIC(18, 4)",Excise Taxes
+uaoloch,True,"NUMERIC(18, 4)",Other Assets and Liabilities - Net Change (Statement of Cash Flows)
+uaox,True,"NUMERIC(18, 4)",Other Assets - Utility
+uapt,True,"NUMERIC(18, 4)",Accounts Payable - Utility
+ucaps,True,"NUMERIC(18, 4)",Paid in Capital - Other
+uccons,True,"NUMERIC(18, 4)",Contributions in Aid of Construction
+uceq,True,"NUMERIC(18, 4)",Common Equity Total - Utility
+ucustad,True,"NUMERIC(18, 4)",Customer Advances for Construction
+udcopres,True,"NUMERIC(18, 4)",Deferred Credits and Operating Reserves - Other
+udd,True,"NUMERIC(18, 4)",Debt (Debentures)
+udfcc,True,"NUMERIC(18, 4)",Deferred Fuel - Increase (Decrease) (Statement of Cash Flows)
+udmb,True,"NUMERIC(18, 4)",Debt (Mortgage Bonds) - Utility
+udolt,True,"NUMERIC(18, 4)",Debt (Other Long-Term) - Utility
+udpco,True,"NUMERIC(18, 4)",Debt (Pollution Control Obligations) - Utility
+udpfa,True,"NUMERIC(18, 4)",Depreciation of Fixed Assets
+udvp,True,"NUMERIC(18, 4)",Preferred Dividend Requirements
+ufretsd,True,"NUMERIC(18, 4)",Funds for Retirement of Securities and Short-Term Debt (Cash Flow)
+ugi,True,"NUMERIC(18, 4)",Gross Income (Income Before Interest Charges)
+ui,True,"NUMERIC(18, 4)",Unearned Income
+uinvt,True,"NUMERIC(18, 4)",Inventories - Utility
+ulcm,True,"NUMERIC(18, 4)",Current Liabilities - Miscellaneous
+ulco,True,"NUMERIC(18, 4)",Current Liabilities - Other - Utility
+uniami,True,"NUMERIC(18, 4)",Net Income before Extraordinary Items and after Noncontrolling Interest
+unl,True,"NUMERIC(18, 4)",Unappropriated Net Loss
+unnp,True,"NUMERIC(18, 4)",Unappropriated Net Profit (Stockholders'' Equity)
+unnpl,True,"NUMERIC(18, 4)",Unappropriated Net Profit
+unopinc,True,"NUMERIC(18, 4)",Nonoperating Income (Net) - Other
+unwcc,True,"NUMERIC(18, 4)",Working Capital (Use) - Increase (Decrease) (Cash Flow)
+uois,True,"NUMERIC(18, 4)",Other Internal Sources - Net (Cash Flow)
+uopi,True,"NUMERIC(18, 4)",Operating Income - Total - Utility
+uopres,True,"NUMERIC(18, 4)",Operating Reserves
+updvp,True,"NUMERIC(18, 4)",Preference Dividend Requirements*
+upmcstk,True,"NUMERIC(18, 4)",Premium on Common Stock*
+upmpf,True,"NUMERIC(18, 4)",Premium on Preferred Stock*
+upmpfs,True,"NUMERIC(18, 4)",Premium on Preference Stock*
+upmsubp,True,"NUMERIC(18, 4)",Premium on Subsidiary Preferred Stock*
+upstk,True,"NUMERIC(18, 4)",Preferred Stock at Carrying Value
+upstkc,True,"NUMERIC(18, 4)",Preference Stock at Carrying Value*
+upstksf,True,"NUMERIC(18, 4)",Preferred/Preference Stock Sinking Fund Requirement
+urect,True,"NUMERIC(18, 4)",Receivables (Net)
+urectr,True,"NUMERIC(18, 4)",Accounts Receivable - Trade - Utility
+urevub,True,"NUMERIC(18, 4)",Accrued Unbilled Revenues (Balance Sheet)
+uspi,True,"NUMERIC(18, 4)",Special Items
+ustdnc,True,"NUMERIC(18, 4)",Short-Term Debt - Decrease (Increase) (Cash Flow)
+usubdvp,True,"NUMERIC(18, 4)",Subsidiary Preferred Dividends
+usubpstk,True,"NUMERIC(18, 4)",Subsidiary Preferred Stock at Carrying Value
+utfdoc,True,"NUMERIC(18, 4)",Total Funds From Operations (Cash Flow)
+utfosc,True,"NUMERIC(18, 4)",Total Funds from Outside Sources (Cash Flow)
+utme,True,"NUMERIC(18, 4)",Maintenance Expense - Total
+utxfed,True,"NUMERIC(18, 4)",Current Taxes - Federal (Operating)
+uwkcapc,True,"NUMERIC(18, 4)",Working Capital (Source) - Decrease (Increase) (Cash Flow)
+uxinst,True,"NUMERIC(18, 4)",Interest On Short-Term Debt - Utility
+uxintd,True,"NUMERIC(18, 4)",Interest on Long-Term Debt*
+vpac,True,"NUMERIC(18, 4)",Investments - Permanent - Associated Companies
+vpo,True,"NUMERIC(18, 4)",Investments - Permanent - Other
+wcap,True,"NUMERIC(18, 4)",Working Capital (Balance Sheet)
+wcapc,True,"NUMERIC(18, 4)",Working Capital Change - Other - Increase/(Decrease)
+wcapch,True,"NUMERIC(18, 4)",Working Capital Change - Total
+wda,True,"NUMERIC(18, 4)",Writedowns After-tax
+wdd,True,"NUMERIC(18, 4)",Writedowns Diluted EPS Effect
+wdeps,True,"NUMERIC(18, 4)",Writedowns Basic EPS Effect
+wdp,True,"NUMERIC(18, 4)",Writedowns Pretax
+xacc,True,"NUMERIC(18, 4)",Accrued Expenses
+xad,True,"NUMERIC(18, 4)",Advertising Expense
+xago,True,"NUMERIC(18, 4)",Administrative and General Expense - Other
+xagt,True,"NUMERIC(18, 4)",Administrative and General Expense - Total
+xcom,True,"NUMERIC(18, 4)",Communications Expense
+xcomi,True,"NUMERIC(18, 4)",Commissions Expense (Insurance)
+xdepl,True,"NUMERIC(18, 4)",Depletion Expense (Schedule VI)
+xdp,True,"NUMERIC(18, 4)",Depreciation Expense (Schedule VI)
+xdvre,True,"NUMERIC(18, 4)",Expense - Development (Real Estate)
+xeqo,True,"NUMERIC(18, 4)",Equipment and Occupancy Expense
+xi,True,"NUMERIC(18, 4)",Extraordinary Items
+xido,True,"NUMERIC(18, 4)",Extraordinary Items and Discontinued Operations
+xidoc,True,"NUMERIC(18, 4)",Extraordinary Items and Discontinued Operations (Cash Flow)
+xindb,True,"NUMERIC(18, 4)",Interest Expense - Deposits - Banks
+xindc,True,"NUMERIC(18, 4)",Interest Expense - Deposits - Customer
+xins,True,"NUMERIC(18, 4)",Interest Expense - Sundry
+xinst,True,"NUMERIC(18, 4)",Interest Expense - Short-Term Borrowings
+xint,True,"NUMERIC(18, 4)",Interest and Related Expense - Total
+xintd,True,"NUMERIC(18, 4)",Interest Expense - Long-Term Debt
+xintopt,True,"NUMERIC(18, 4)",Implied Option Expense
+xivi,True,"NUMERIC(18, 4)",Investment Expense (Insurance)
+xivre,True,"NUMERIC(18, 4)",Expense - Investment (Real Estate)
+xlr,True,"NUMERIC(18, 4)",Staff Expense - Total
+xnbi,True,"NUMERIC(18, 4)",Other Insurance Expense
+xnf,True,"NUMERIC(18, 4)",Non-Financial Services Expense
+xnins,True,"NUMERIC(18, 4)",Other Expense - Noninsurance
+xnitb,True,"NUMERIC(18, 4)",Expense - Noninterest - Total (Bank)
+xobd,True,"NUMERIC(18, 4)",Expense - Other (Broker/Dealer)
+xoi,True,"NUMERIC(18, 4)",Expenses - Other (Insurance)
+xopr,True,"NUMERIC(18, 4)",Operating Expenses - Total
+xoprar,True,"NUMERIC(18, 4)",Operatings Expenses - As Reported
+xoptd,True,"NUMERIC(18, 4)",Implied Option EPS Diluted
+xopteps,True,"NUMERIC(18, 4)",Implied Option EPS Basic
+xore,True,"NUMERIC(18, 4)",Expense - Other (Real Estate)
+xpp,True,"NUMERIC(18, 4)",Prepaid Expenses
+xpr,True,"NUMERIC(18, 4)",Pension and Retirement Expense
+xrd,True,"NUMERIC(18, 4)",Research and Development Expense
+xrdp,True,"NUMERIC(19, 4)",Research & Development - Prior
+xrent,True,"NUMERIC(18, 4)",Rental Expense
+xs,True,"NUMERIC(18, 4)",Expense - Sundry
+xsga,True,"NUMERIC(18, 4)","Selling, General and Administrative Expense"
+xstf,True,"NUMERIC(18, 4)",Staff Expense (Income Account)
+xstfo,True,"NUMERIC(18, 4)",Staff Expense - Other
+xstfws,True,"NUMERIC(18, 4)",Staff Expense - Wages and Salaries
+xt,True,"NUMERIC(18, 4)",Expense - Total
+xuw,True,"NUMERIC(18, 4)",Other Underwriting Expenses - Insurance
+xuwli,True,"NUMERIC(18, 4)",Underwriting Expense - Life
+xuwnli,True,"NUMERIC(18, 4)",Underwriting Expense - Non-Life
+xuwoi,True,"NUMERIC(18, 4)",Underwriting Expense - Other
+xuwrei,True,"NUMERIC(18, 4)",Underwriting Expense - Reinsurance
+xuwti,True,"NUMERIC(18, 4)",Underwriting Expense - Total
+iid,True,VARCHAR(3),Header Primary Global Issue ID
+exchg,True,INTEGER,Stock Exchange Code
+cik,True,VARCHAR(11),CIK Number
+costat,True,VARCHAR(2),Active/Inactive Status Marker
+fic,True,VARCHAR(4),Current ISO Country Code - Incorporation
+naicsh,True,INTEGER,North America Industrial Classification System - Historical
+sich,True,INTEGER,Standard Industrial Classification - Historical
+hiid,True,VARCHAR(21),Historic Primary Global Issue ID
+cshtr_c,True,"NUMERIC(18, 4)",Common Shares Traded - Annual - Calendar
+dvpsp_c,True,"NUMERIC(18, 4)",Dividends per Share - Pay Date - Calendar
+dvpsx_c,True,"NUMERIC(18, 4)",Dividends per Share - Ex-Date - Calendar
+prcc_c,True,"NUMERIC(24, 12)",Price Close - Annual - Calendar
+prch_c,True,"NUMERIC(24, 12)",Price High - Annual - Calendar
+prcl_c,True,"NUMERIC(24, 12)",Price Low - Annual - Calendar
+adjex_c,True,"NUMERIC(24, 12)",Cumulative Adjustment Factor by Ex-Date - Calendar
+cshtr_f,True,"NUMERIC(18, 4)",Common Shares Traded - Annual - Fiscal
+dvpsp_f,True,"NUMERIC(18, 4)",Dividends per Share - Pay Date - Fiscal
+dvpsx_f,True,"NUMERIC(18, 4)",Dividends per Share - Ex-Date - Fiscal
+mkvalt,True,"NUMERIC(18, 4)",Market Value - Total - Fiscal
+prcc_f,True,"NUMERIC(24, 12)",Price Close - Annual - Fiscal
+prch_f,True,"NUMERIC(24, 12)",Price High - Annual - Fiscal
+prcl_f,True,"NUMERIC(24, 12)",Price Low - Annual - Fiscal
+adjex_f,True,"NUMERIC(24, 12)",Cumulative Adjustment Factor by Ex-Date - Fiscal
+rank,True,INTEGER,Rank - Auditor
+au,True,VARCHAR(9),Auditor
+auop,True,VARCHAR(9),Auditor Opinion
+auopic,True,VARCHAR(2),Auditor Opinion - Internal Control
+ceoso,True,VARCHAR(2),Chief Executive Officer SOX Certification
+cfoso,True,VARCHAR(2),Chief Financial Officer SOX Certification

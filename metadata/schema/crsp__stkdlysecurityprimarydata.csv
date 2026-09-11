@@ -1,0 +1,13 @@
+name,nullable,type,comment
+permno,True,INTEGER,PERMNO
+dlycaldt,True,DATE,Daily Calendar Date
+dlydelflg,True,VARCHAR(1),Daily Delisting Flag
+dlyprc,True,"NUMERIC(13, 6)",Daily Price
+dlyprcflg,True,VARCHAR(2),Daily Price Flag
+dlycap,True,"NUMERIC(13, 2)",Daily Capitalization
+dlycapflg,True,VARCHAR(2),Daily Capitalization Flag
+dlyret,True,"NUMERIC(10, 6)",Daily Total Return
+dlyretx,True,"NUMERIC(10, 6)",Daily Price Return
+dlyretmissflg,True,VARCHAR(2),Daily Return Missing Flag
+dlydistretflg,True,VARCHAR(2),Daily Distribution Return Impact Flag
+dlyvol,True,"NUMERIC(14, 0)",Daily Volume

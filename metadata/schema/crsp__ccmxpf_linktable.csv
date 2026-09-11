@@ -1,0 +1,10 @@
+name,nullable,type,comment
+gvkey,True,VARCHAR(6),Standard and Poor's Identifier
+linkprim,True,VARCHAR(1),Primary Link Marker
+liid,True,VARCHAR(3),Security-level Identifer
+linktype,True,VARCHAR(2),Link Type Code
+lpermno,True,DOUBLE PRECISION,Historical CRSP PERMNO Link to COMPUSTAT Record
+lpermco,True,DOUBLE PRECISION,Historical CRSP PERMCO Link to COMPUSTAT Record
+usedflag,True,DOUBLE PRECISION,Flag marking whether link is used in building composite record
+linkdt,True,DATE,First Effective Date of Link
+linkenddt,True,DATE,Last Effective Date of Link

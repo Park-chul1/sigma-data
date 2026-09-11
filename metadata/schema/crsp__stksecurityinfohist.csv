@@ -1,0 +1,37 @@
+name,nullable,type,comment
+permno,True,INTEGER,PERMNO
+secinfostartdt,True,DATE,Security Information Start Date
+secinfoenddt,True,DATE,Security Information End Date
+securitybegdt,True,DATE,Begin Date of Stock Data
+securityenddt,True,DATE,End Date of Stock Data
+securityhdrflg,True,VARCHAR(1),Security Header Flag
+hdrcusip,True,VARCHAR(8),Header CUSIP -8 Characters
+hdrcusip9,True,VARCHAR(9),Header CUSIP -9 Characters
+cusip,True,VARCHAR(8),CUSIP
+cusip9,True,VARCHAR(9),CUSIP9
+primaryexch,True,VARCHAR(1),Primary Exchange
+conditionaltype,True,VARCHAR(3),Conditional Type
+exchangetier,True,VARCHAR(3),Exchange Tier
+tradingstatusflg,True,VARCHAR(1),Trading Status Flag
+securitynm,True,VARCHAR(60),Security Name
+shareclass,True,VARCHAR(1),Share Class
+usincflg,True,VARCHAR(1),US Incorporation Flag
+issuertype,True,VARCHAR(4),Issuer Type
+securitytype,True,VARCHAR(4),Security Type
+securitysubtype,True,VARCHAR(3),Security Sub-Type
+sharetype,True,VARCHAR(3),Share Type
+securityactiveflg,True,VARCHAR(1),Security Active Flag
+delactiontype,True,VARCHAR(5),Delisting Corporate Action Type
+delstatustype,True,VARCHAR(4),Delisting Completion Status Type
+delreasontype,True,VARCHAR(5),Delisting Reason Type
+delpaymenttype,True,VARCHAR(4),Delisting Payment Summary Type
+ticker,True,VARCHAR(5),Ticker
+tradingsymbol,True,VARCHAR(7),Trading Symbol
+permco,True,INTEGER,PERMCO
+siccd,True,INTEGER,Sic Code
+naics,True,VARCHAR(6),NAICS Code
+icbindustry,True,VARCHAR(7),ICB Industry Code
+uesindustry,True,VARCHAR(10),UES Industry Code
+nasdcompno,True,INTEGER,Nasdaq Company Number
+nasdissuno,True,INTEGER,Nasdaq Issue Number
+issuernm,True,VARCHAR(50),Issuer Name

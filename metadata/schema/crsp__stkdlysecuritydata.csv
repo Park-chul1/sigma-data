@@ -1,0 +1,33 @@
+name,nullable,type,comment
+permno,True,INTEGER,PERMNO
+yyyymmdd,True,INTEGER,YYYYMMDD - Daily Calendar Period Key
+dlycaldt,True,DATE,Daily Calendar Date
+dlydelflg,True,VARCHAR(1),Daily Delisting Flag
+dlyprc,True,"NUMERIC(13, 6)",Daily Price
+dlyprcflg,True,VARCHAR(2),Daily Price Flag
+dlycap,True,"NUMERIC(13, 2)",Daily Capitalization
+dlycapflg,True,VARCHAR(2),Daily Capitalization Flag
+dlyprevprc,True,"NUMERIC(13, 6)",Daily Previous Price
+dlyprevprcflg,True,VARCHAR(2),Daily Previous Price Flag
+dlyprevdt,True,DATE,Daily Previous Price Date
+dlyprevcap,True,"NUMERIC(13, 2)",Daily Previous Capitalization
+dlyprevcapflg,True,VARCHAR(2),Daily Previous Capitalization Flag
+dlyret,True,"NUMERIC(10, 6)",Daily Total Return
+dlyretx,True,"NUMERIC(10, 6)",Daily Price Return
+dlyreti,True,"NUMERIC(10, 6)",Daily Income Return
+dlyretmissflg,True,VARCHAR(2),Daily Return Missing Flag
+dlyretdurflg,True,VARCHAR(2),Daily Return Duration Flag
+dlyorddivamt,True,"NUMERIC(13, 6)",Daily Ordinary Dividend Amount
+dlynonorddivamt,True,"NUMERIC(13, 6)",Daily Non-Ordinary Dividend Amount
+dlyfacprc,True,"NUMERIC(10, 6)",Daily Factor To Adjust Price
+dlydistretflg,True,VARCHAR(2),Daily Distribution Return Impact Flag
+dlyvol,True,"NUMERIC(14, 0)",Daily Volume
+dlyclose,True,"NUMERIC(13, 6)",Daily Close
+dlylow,True,"NUMERIC(13, 6)",Daily Low
+dlyhigh,True,"NUMERIC(13, 6)",Daily High
+dlybid,True,"NUMERIC(13, 6)",Daily Bid
+dlyask,True,"NUMERIC(13, 6)",Daily Ask
+dlyopen,True,"NUMERIC(13, 6)",Daily Open
+dlynumtrd,True,INTEGER,Daily Number Of Trades
+dlymmcnt,True,SMALLINT,Daily Market Maker Count
+dlyprcvol,True,"NUMERIC(14, 1)",Daily Price Volume
