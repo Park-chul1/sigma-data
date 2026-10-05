@@ -1,6 +1,12 @@
 # Project Sigma 데이터 파이프라인 기본 원칙
 
+<<<<<<< HEAD
 - 최종 수정일: 2026-09-13
+=======
+- 문서 상태: 작업 명세서
+- 버전: 0.2
+- 최종 수정일: 2026-10-03
+>>>>>>> ef8c971 (Process corporate events)
 - 기본 저장소: `Park-chul1/sigma-data`
 - 현재 목표: 재현 가능하고 PIT 및 생존편향을 통제한 백테스트용 데이터셋 구축
 
@@ -116,6 +122,14 @@ t일 장 마감까지 확정된 정보 사용
 - Forward return은 평가 label이며 feature에 사용할 수 없다.
 - 다른 체결 시점은 run config에 명시한다.
 
+<<<<<<< HEAD
+=======
+현재 연구 데이터 생성기는 `vendor_return_research`만 지원하며 주문 체결을 시뮬레이션하지 않는다.
+위의 다음 날 시가 체결은 목표 실행 모델이다. 시가와 구간별 수익률 검증 전에는 일별 vendor return을
+그 체결의 실현손익으로 사용하지 않는다. 현재 기본 정보 시점은 추가 1거래일 후 폐장 30분,
+의사결정은 폐장 60분이다. 발표 시각·과거 빈티지가 없어 근사 PIT로 표시하며 엄격한 PIT 요청은 거부한다.
+
+>>>>>>> ef8c971 (Process corporate events)
 ## 5. 종목 식별과 과거 상태
 
 - `PERMNO`를 기본 증권 식별자로 사용한다.
@@ -141,7 +155,11 @@ PIT join 후 일봉 행 수가 증가하면 유효기간 중복이나 모호한 
 - `price_raw`: 당시 실제 관측가격
 - `market_cap_kusd`: 당시 시가총액, 단위 천 달러
 - `ret_total_vendor`: 벤더 총수익률
+<<<<<<< HEAD
 - `ret_ex_div`: 분배 제외 가격수익률
+=======
+- `ret_ex_div`: CRSP DlyRetx, ordinary dividend 제외 수익률. 모든 분배 제외로 해석하지 않는다.
+>>>>>>> ef8c971 (Process corporate events)
 - `ret_total_backtest`: 검증 후 백테스트 수익률
 - `return_source`: 최종 수익률의 출처와 생성 방식
 
@@ -187,7 +205,17 @@ RAW와 NORMALIZED는 재사용한다. PIT/DERIVED, FACTOR, BACKTEST는 사용자
 - `process_start`: lookback과 lag를 확보하기 위한 실제 처리 시작일
 - `requested_end`: 백테스트 종료일
 
+<<<<<<< HEAD
 `process_start`는 최대 factor lookback, 정보 lag, calendar buffer를 포함해 자동 계산한다.
+=======
+`process_start`는 거래소 세션으로 전체 계산 의존성을 따라 계산한다. 과거 모델 학습 구간을 먼저 확보하고,
+그 첫 입력 앞에도 factor lookback과 정보 lag를 확보한다. 미래 수익률 라벨은 관측 구간과 이용 가능
+시각이 모두 학습 cutoff 이전이어야 한다. 준비 시작일, 학습 구간, 평가 구간, 의사결정/체결 시각,
+표시 지수 기준일을 구분하며 필요한 준비 데이터 부족은 실행을 실패시킨다.
+
+같은 원천·처리 규칙의 월별 derived와 같은 준비 조건의 팩터는 캐시로 재사용한다. 원천 content hash,
+정책·코드·의존성 버전이 달라지면 캐시를 무효화한다. 표시 기준일은 팩터 캐시나 학습 입력에 영향을 주지 않는다.
+>>>>>>> ef8c971 (Process corporate events)
 
 미래정보 차단:
 
@@ -335,6 +363,14 @@ requires_review
 5. 둘 다 유효하지 않으면 NULL과 review 상태를 유지한다.
 6. 최종 경제적 수익률 반영 후 기존 PERMNO 계열을 종료한다.
 
+<<<<<<< HEAD
+=======
+현재 CIZ snapshot은 일별 terminal 행과 별도 이벤트 값이 일치함을 확인했으므로 embedded return을
+한 번만 사용한다. `ret_missing_flag=MV` 등은 숫자가 있어도 불완전 결과이므로 원천 값은 보존하고
+검증된 연구 수익률은 NULL로 둔다. terminal 지급액의 공개·현금 가용 시점은 미확인으로 두고
+팩터·학습 라벨에 사용하지 않는다. 미지원 보유 이벤트나 미확인 손익을 0으로 채우거나 삭제하지 않는다.
+
+>>>>>>> ef8c971 (Process corporate events)
 권장 `return_source`:
 
 ```text
@@ -409,6 +445,7 @@ requires_review
 - 일봉 key, 행 수, 유효기간 검증
 - Sample PIT metadata join 검증
 - Sample baseline investable universe 생성
+<<<<<<< HEAD
 
 미완성:
 
@@ -419,6 +456,25 @@ requires_review
 - 전체 기간 historical investable universe
 - Run별 backtest dataset builder
 - Total-return 및 price-return index builder
+=======
+- 기간 지정 CIZ 연구 데이터 builder와 월별 row-preserving 공통 derived cache
+- 거래소 캘린더 기반 학습·팩터·정보 지연 준비 구간 계산
+- 근사 PIT features와 성숙한 학습 labels 분리, 전체 요청 구간 baseline universe
+- 원천 코드 분류, embedded terminal return 대조 및 중복 반영 방지
+- NULL/숫자 MV/미지원 이벤트 품질 처리와 보유 구간 결과 guard
+- 별도 개별 종목 100 기준 표시 지수, 팩터·원천 해시 캐시 및 run manifest
+- 합성 fixture와 제한된 실제 corporate event 사례 검증
+
+미완성:
+
+- 엄격한 historical-vintage `security_daily_pit` (현재 임의 요청 구간의 근사 PIT 지원)
+- 현금·주식 수량 기반 통합 corporate-event ledger
+- 상세 CRSP corporate-action 필드
+- terminal payout 공개·지급 시점과 경계/결측 결과 해소
+- 실제 체결 가능성을 검증한 historical universe (현재 지연된 관측 eligibility 제공)
+- 거래 엔진과 실행 모델에 연결된 backtest (현재 연구 dataset builder 지원)
+- 별도 price-return index builder (현재 총수익률 표시 지수 지원)
+>>>>>>> ef8c971 (Process corporate events)
 - Compustat publication-date PIT join
 - CRSP-Compustat link history
 - 신규 데이터 기반 factor 및 transaction-cost backtest
@@ -439,15 +495,23 @@ requires_review
 
 ## 14. 미확정 항목
 
+<<<<<<< HEAD
 - CRSP daily total return에 포함된 delisting return 범위
+=======
+- source/version 변경 시 CRSP daily terminal return 포함 여부 재검증
+>>>>>>> ef8c971 (Process corporate events)
 - Corporate-event ledger의 최종 필드와 원본 테이블
 - Split 및 조직개편 시 단주 처리
 - Rights offering 행사 정책
 - Spin-off 신규 포지션 정책
 - 해결되지 않은 delisting return 기본 처리
 - 시각 없이 날짜만 있을 때의 availability lag
+<<<<<<< HEAD
 - Rebased index 저장 여부
 - Cache 구조와 canonical run ID
+=======
+- 가격수익률 지수 추가 저장 여부 (현재 총수익률 display artifact로 분리)
+>>>>>>> ef8c971 (Process corporate events)
 - Factor별 최소 과거 관측치
 
 ## 15. 변경 절차
@@ -462,6 +526,17 @@ requires_review
 
 ## 16. 변경 이력
 
+<<<<<<< HEAD
+=======
+### Version 0.2 - 2026-10-03
+
+- 현재 CIZ 원천 정의에 맞춰 ordinary-dividend 제외 수익률과 embedded terminal 정책 명시
+- 학습 앞의 팩터 준비 구간, 라벨 성숙 시점, 근사 PIT 한계와 실행 미지원 범위 구분
+- 월별 derived/팩터 캐시, content-addressed run, 원천 보존과 품질 실패 인터페이스 구현
+- 표시용 100 기준 지수와 전략 입력 분리, corporate event 중복 반영 방지 검증
+- 실행·스키마·지원 범위는 [PIT research pipeline](docs/PIT_RESEARCH_PIPELINE.md)에 기록
+
+>>>>>>> ef8c971 (Process corporate events)
 ### Version 0.1 - 2026-09-13
 
 - 표준 계층형 파이프라인 확정

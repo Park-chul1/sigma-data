@@ -25,6 +25,7 @@ secrets*
 # Python
 # ============================================================
 .venv/
+.venv-research/
 venv/
 __pycache__/
 *.py[cod]
