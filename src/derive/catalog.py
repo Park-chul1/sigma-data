@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import tempfile
 
 
@@ -124,6 +125,21 @@ class NormalizedCatalog:
                          "inventory": inventory, "raw_manifests": all_manifests,
                          "source_start": self.source_start, "source_end": self.source_end,
                          "vendor_release": None,
+                         "temporal_provenance": {
+                             "source_vintage": None,
+                             "source_vintage_status": "UNKNOWN_NO_HISTORICAL_REVISION_VINTAGES",
+                             "ingested_at": [
+                                 {"manifest_path": item["path"],
+                                  "source_table": item["metadata"]["source_table"],
+                                  "timestamp": item["metadata"].get("downloaded_at_utc"),
+                                  "basis": "RAW_MANIFEST_DOWNLOADED_AT_UTC"}
+                                 for item in all_manifests
+                             ],
+                             "ingested_at_status": "RECORDED_RAW_COLLECTION_TIMES_ONLY",
+                             "effective_date_basis": "SOURCE_OBSERVATION_OR_VALIDITY_DATE",
+                             "available_at_basis": "ASSUMED_SESSION_LAG_NOT_PUBLICATION_TIME",
+                             "normalized_at_is_publication_time": False,
+                         },
                          "identity_method": "SHA256; cached by size/mtime_ns/ctime_ns/inode/device"}
         self.snapshot_id = digest(self.snapshot)
         self.hashes.save()
@@ -154,8 +170,35 @@ def verify_artifacts(folder, hashes):
     manifest_path = folder / "_SUCCESS.json"
     if not manifest_path.is_file():
         raise RuntimeError(f"Uncommitted derived output: {folder}")
-    manifest = json.loads(manifest_path.read_text())
-    for name, fingerprint in manifest["artifacts"].items():
+    try:
+        manifest = json.loads(manifest_path.read_text())
+    except (ValueError, UnicodeError) as exc:
+        raise RuntimeError(f"Derived manifest changed/corrupt: {manifest_path}") from exc
+    artifacts = manifest.get("artifacts") if isinstance(manifest, dict) else None
+    if not isinstance(artifacts, dict) or not artifacts:
+        raise RuntimeError(f"Derived artifact inventory missing/corrupt: {manifest_path}")
+    for name, fingerprint in artifacts.items():
+        if (not isinstance(name, str) or Path(name).name != name or not name.endswith(".parquet")
+                or not isinstance(fingerprint, str) or re.fullmatch(r"[0-9a-f]{64}", fingerprint) is None):
+            raise RuntimeError(f"Derived artifact inventory changed/corrupt: {manifest_path}")
+    names = set(artifacts)
+    # A removed checksum must not make a damaged/missing result reusable. Run
+    # row counts and declared roles independently describe the output contract.
+    if "run_id" in manifest:
+        rows = manifest.get("rows")
+        roles = manifest.get("artifact_roles")
+        if (not isinstance(rows, dict) or set(rows) != names
+                or not isinstance(roles, dict) or not set(roles) <= names):
+            raise RuntimeError(f"Derived artifact inventory changed/corrupt: {manifest_path}")
+    elif "month" in manifest:
+        if not {"panel.parquet", "events.parquet", "terminal_reconciliation.parquet"} <= names:
+            raise RuntimeError(f"Derived artifact inventory changed/corrupt: {manifest_path}")
+    elif "context" in manifest:
+        if names != {"factors.parquet"}:
+            raise RuntimeError(f"Derived artifact inventory changed/corrupt: {manifest_path}")
+    if names != {path.name for path in folder.glob("*.parquet")}:
+        raise RuntimeError(f"Derived artifact inventory changed/corrupt: {folder}")
+    for name, fingerprint in artifacts.items():
         if not (folder / name).is_file() or hashes.file(folder / name) != fingerprint:
             raise RuntimeError(f"Derived artifact changed/corrupt: {folder / name}")
     return manifest

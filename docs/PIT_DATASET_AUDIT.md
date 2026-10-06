@@ -2,6 +2,13 @@
 
 Audit date: 2026-09-27. Repository commit inspected: `f495c9e`.
 
+Re-audit update (2026-10-06, starting HEAD `e71452e`): unresolved Python/document
+merge markers and the duplicate corporate-event generator were found in that
+commit. The generator is now a compatibility entrypoint to the common research
+pipeline; return/date reconciliation, artifact integrity and sample-dropout
+audits have been strengthened. This document below remains a historical audit;
+see the current pipeline documentation for executed tests and bounded real-data results.
+
 Implementation update (2026-10-03): the bounded approximate-PIT research builder,
 event/return policies, trading-calendar warmup, separated features/labels/display,
 content-addressed caches, and synthetic tests are now implemented. See

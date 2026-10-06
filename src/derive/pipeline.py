@@ -20,10 +20,11 @@ import duckdb
 from .catalog import (ContentHashes, NormalizedCatalog, canonical_json, code_identity,
                       digest, parquet_sql, sql_literal as q, verify_artifacts, write_json)
 from .temporal import SessionCalendar, calendar_schedule, plan_research_window
-from .events import DISTRIBUTION_EFFECT_MAP, EVENT_ACTION_MAP, EVENT_POLICY_VERSION, SUPPORTED_TERMINAL_ACTIONS
+from .training_audit import create_labels, create_training_audit
+from .events import DISTRIBUTION_EFFECT_MAP, EVENT_ACTION_MAP, EVENT_POLICY_VERSION, return_quality_sql
 
 
-RULES_VERSION = "sigma-ciz-research-1"
+RULES_VERSION = "sigma-ciz-research-2"
 REPO = Path(__file__).resolve().parents[2]
 DAILY_COLUMNS = {"permno", "date", "price_raw", "market_cap_kusd", "ret_total", "ret_ex_div",
                  "volume_raw_shares", "delist_flag", "price_flag", "market_cap_flag",
@@ -98,16 +99,38 @@ def _load_reference_tables(con, catalog, schedule):
         raise RuntimeError("Duplicate delisting event keys")
     if _count(con, "SELECT count(*) FROM delistings WHERE permno IS NULL OR event_date IS NULL"):
         raise RuntimeError("NULL delisting keys")
-    # This is an explicitly checked CIZ storage-date convention, not nearest-event matching.
-    # The missing original DelDlyDt remains an evidence limitation in each record.
+    # Prefer an actually ingested DelDlyDt. A missing field permits the documented
+    # convention fallback, whereas a present-but-NULL field remains unknown.
+    event_columns = {r[0].lower(): r[0] for r in con.execute("DESCRIBE delistings").fetchall()}
+    def optional_column(names, sql_type):
+        selected = [event_columns[n] for n in names if n in event_columns]
+        if len(selected) > 1:
+            raise RuntimeError(f"Ambiguous optional event fields: {selected}")
+        return (f'e."{selected[0]}"::{sql_type}' if selected else f'NULL::{sql_type}', bool(selected))
+    source_storage, has_source_storage = optional_column(("return_storage_date", "deldlydt"), "DATE")
+    source_missing, has_source_missing = optional_column(
+        ("event_ret_missing_flag", "delisting_ret_missing_flag", "delretmisstype"), "VARCHAR")
     earliest_event, latest_event = con.execute("SELECT min(event_date),max(event_date) FROM delistings").fetchone()
     con.execute("CREATE TEMP TABLE event_calendar(date DATE)")
     if earliest_event is not None:
         event_calendar = SessionCalendar(earliest_event-timedelta(days=10),latest_event+timedelta(days=30))
         con.executemany("INSERT INTO event_calendar VALUES (?)",[(d,) for d in event_calendar.sessions])
-    con.execute("""CREATE TEMP TABLE terminal_events AS
-        SELECT e.*, (SELECT min(date) FROM event_calendar WHERE date > e.event_date) AS return_storage_date
+    storage = source_storage if has_source_storage else "(SELECT min(date) FROM event_calendar WHERE date > e.event_date)"
+    # Select the contractual fields explicitly, avoiding duplicate names when a
+    # richer normalized source supplies a standardized return_storage_date.
+    fields = ",".join(f"e.{name}" for name in sorted(DELIST_COLUMNS))
+    con.execute(f"""CREATE TEMP TABLE terminal_events AS
+        SELECT {fields}, {source_storage} AS source_return_storage_date,
+          {storage} AS return_storage_date,
+          {'true' if has_source_missing else 'false'} AS event_missing_flag_present,
+          {source_missing} AS event_ret_missing_flag,
+          {q('SOURCE_DELDLYDT' if has_source_storage else 'NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE')} AS storage_date_basis
         FROM delistings e""")
+    if _count(con, "SELECT count(*) FROM terminal_events WHERE return_storage_date<=event_date"):
+        raise RuntimeError("Terminal source storage date must follow event date")
+    if _count(con, """SELECT count(*) FROM (SELECT permno,return_storage_date FROM terminal_events
+            WHERE return_storage_date IS NOT NULL GROUP BY ALL HAVING count(*)>1)"""):
+        raise RuntimeError("Ambiguous terminal storage keys")
 
 
 def _build_month(con, catalog, key, folder, context):
@@ -134,8 +157,7 @@ def _build_month(con, catalog, key, folder, context):
     extra = con.execute("SELECT DISTINCT date FROM daily EXCEPT SELECT date FROM calendar").fetchall()
     if missing or extra:
         raise RuntimeError(f"Calendar coverage mismatch for {key}: missing={missing}, extra={extra}")
-    known_dist = ",".join(q(v) for v in KNOWN_DIST)
-    supported_terminal = ",".join(q(v) for v in sorted(SUPPORTED_TERMINAL_ACTIONS))
+    quality_sql = return_quality_sql(reconciliation="r.terminal_reconciliation")
     con.execute(f"""CREATE OR REPLACE TEMP TABLE joined AS
       SELECT d.*, c.session_index, c.available_at,
         h.ticker AS ticker_asof, h.cusip AS cusip_asof, h.primary_exchange,
@@ -144,18 +166,10 @@ def _build_month(con, catalog, key, folder, context):
         h.valid_from AS metadata_effective_from,
         h.permno IS NOT NULL AS has_metadata,
         e.event_date AS terminal_event_date,e.delisting_return,
+        e.return_storage_date,e.source_return_storage_date,e.storage_date_basis,
+        e.event_ret_missing_flag,e.event_missing_flag_present,r.terminal_reconciliation,
         e.action_type,e.status_type,e.reason_type,e.payment_type,e.successor_permno,
-        CASE WHEN d.ret_total IS NULL THEN 'MISSING_RETURN'
-             WHEN NOT isfinite(d.ret_total) OR d.ret_total < -1 THEN 'INVALID_RETURN'
-             WHEN d.ret_missing_flag IS DISTINCT FROM 'NA' THEN 'INCOMPLETE_VENDOR_RETURN'
-             WHEN d.distribution_return_flag IS NULL OR d.distribution_return_flag NOT IN ({known_dist})
-                 THEN 'UNKNOWN_DISTRIBUTION_FLAG'
-             WHEN d.delist_flag NOT IN ('Y','N') OR d.delist_flag IS NULL THEN 'UNKNOWN_DELIST_FLAG'
-             WHEN d.delist_flag='Y' AND e.permno IS NULL THEN 'UNMATCHED_TERMINAL_EVENT'
-             WHEN d.delist_flag='Y' AND d.ret_total IS DISTINCT FROM e.delisting_return THEN 'TERMINAL_RETURN_MISMATCH'
-             WHEN d.delist_flag='Y' AND (e.action_type IS NULL OR e.action_type NOT IN ({supported_terminal}))
-                 THEN 'UNSUPPORTED_TERMINAL_EVENT'
-             ELSE 'VALID_VENDOR_RETURN' END AS return_quality,
+        {quality_sql} AS return_quality,
         CASE WHEN h.permno IS NOT NULL THEN 'EFFECTIVE_INTERVAL_APPROXIMATE_PIT'
              WHEN d.delist_flag='Y' THEN 'TERMINAL_OUTSIDE_METADATA'
              ELSE 'MISSING_METADATA' END AS metadata_quality,
@@ -169,6 +183,13 @@ def _build_month(con, catalog, key, folder, context):
         AND d.date >= h.valid_from AND d.date <= coalesce(h.valid_to, DATE '9999-12-31')
       LEFT JOIN terminal_events e ON d.delist_flag='Y' AND d.permno=e.permno
         AND d.date=e.return_storage_date
+      CROSS JOIN LATERAL (SELECT CASE
+        WHEN d.delist_flag IS DISTINCT FROM 'Y' THEN 'NOT_TERMINAL_RETURN'
+        WHEN e.permno IS NULL THEN 'UNMATCHED_TERMINAL_EVENT'
+        WHEN d.ret_total IS DISTINCT FROM e.delisting_return THEN 'TERMINAL_RETURN_MISMATCH'
+        WHEN e.event_missing_flag_present AND d.ret_missing_flag IS DISTINCT FROM e.event_ret_missing_flag
+          THEN 'TERMINAL_MISSING_FLAG_MISMATCH'
+        WHEN d.ret_total IS NULL THEN 'MATCHED_NULL' ELSE 'MATCHED_VALUE' END AS terminal_reconciliation) r
     """)
     if _count(con, "SELECT count(*) FROM joined") != rows:
         raise RuntimeError(f"Ambiguous history/event match changed daily row count: {key}")
@@ -178,6 +199,8 @@ def _build_month(con, catalog, key, folder, context):
         CASE WHEN return_quality='VALID_VENDOR_RETURN' AND delist_flag='N' THEN ret_total END AS ret_total_for_signal,
         CASE WHEN delist_flag='Y' THEN 'CRSP_DELIST_EMBEDDED' ELSE 'CRSP_DAILY' END AS return_source,
         false AS return_was_reconstructed,
+        CASE WHEN delist_flag='Y' THEN 'TERMINAL_RETURN_STORAGE'
+             WHEN delist_flag='N' THEN 'ORDINARY_DAILY' ELSE 'UNKNOWN_SOURCE_FLAG' END AS daily_record_type,
         delist_flag='Y' AS is_delisting_return, delist_flag='Y' AS is_eventual_outcome,
         delist_flag='Y' OR distribution_return_flag NOT IN ('NO','NA') OR distribution_return_flag IS NULL AS event_terms_incomplete,
         CASE WHEN delist_flag='Y' OR distribution_return_flag NOT IN ('NO','NA') OR distribution_return_flag IS NULL
@@ -188,6 +211,29 @@ def _build_month(con, catalog, key, folder, context):
         'UNSUPPORTED_MISSING_OPEN_AND_EXECUTION_MODEL' AS execution_status
       FROM joined""")
     _copy(con, "SELECT * FROM panel ORDER BY permno,date", folder / "panel.parquet")
+    # Reverse audit retains events even when their expected daily row is absent
+    # or wrongly flagged. It never filters or changes ordinary feature rows.
+    _copy(con, f"""SELECT e.permno,coalesce(e.return_storage_date,e.event_date) AS observed_date,
+        e.event_date AS effective_date,e.return_storage_date,e.source_return_storage_date,e.storage_date_basis,
+        d.date AS actual_daily_date,d.delist_flag,d.ret_total AS ret_total_vendor,e.delisting_return,
+        d.ret_missing_flag,e.event_ret_missing_flag,e.event_missing_flag_present,
+        CASE WHEN e.return_storage_date IS NULL THEN 'MISSING_SOURCE_STORAGE_DATE'
+             WHEN d.permno IS NULL THEN 'MISSING_TERMINAL_DAILY_ROW'
+             WHEN d.delist_flag IS DISTINCT FROM 'Y' THEN 'EXPECTED_TERMINAL_FLAG'
+             WHEN d.ret_total IS DISTINCT FROM e.delisting_return THEN 'TERMINAL_RETURN_MISMATCH'
+             WHEN e.event_missing_flag_present AND d.ret_missing_flag IS DISTINCT FROM e.event_ret_missing_flag
+               THEN 'TERMINAL_MISSING_FLAG_MISMATCH'
+             WHEN d.ret_total IS NULL THEN 'MATCHED_NULL' ELSE 'MATCHED_VALUE' END AS reconciliation_status,
+        'AUDIT_ONLY_NOT_FEATURE_OR_PUBLICATION_TIME' AS usage
+      FROM terminal_events e LEFT JOIN daily d ON d.permno=e.permno AND d.date=e.return_storage_date
+      WHERE year(coalesce(e.return_storage_date,e.event_date))={year}
+        AND month(coalesce(e.return_storage_date,e.event_date))={month}
+      UNION ALL
+      SELECT permno,date,NULL::DATE,NULL::DATE,NULL::DATE,'NO_MATCHING_EVENT',
+        date,delist_flag,ret_total,NULL::DOUBLE,ret_missing_flag,NULL::VARCHAR,false,
+        'UNMATCHED_TERMINAL_EVENT','AUDIT_ONLY_NOT_FEATURE_OR_PUBLICATION_TIME'
+      FROM panel WHERE delist_flag='Y' AND terminal_event_date IS NULL
+      ORDER BY permno,observed_date""", folder / "terminal_reconciliation.parquet")
     # Event evidence is separate from strategy inputs. Codes describe economic categories,
     # but do not supply ratios, amounts, successor shares, or announcement timestamps.
     action_case = " ".join(f"WHEN action_type={q(code)} THEN {q(effect)}" for code,effect in EVENT_ACTION_MAP.items())
@@ -195,6 +241,7 @@ def _build_month(con, catalog, key, folder, context):
                                  for code,effects in DISTRIBUTION_EFFECT_MAP.items())
     _copy(con, f"""SELECT permno,date AS observed_date,
         terminal_event_date AS effective_date,
+        return_storage_date,source_return_storage_date,storage_date_basis,terminal_reconciliation,
         CASE WHEN terminal_event_date IS NOT NULL THEN 'SOURCE_DELISTING_DATE'
              ELSE 'UNKNOWN_DAILY_IMPACT_DATE_ONLY' END AS effective_date_basis,
         NULL::TIMESTAMPTZ AS announced_at,
@@ -208,10 +255,10 @@ def _build_month(con, catalog, key, folder, context):
         CASE WHEN return_quality='VALID_VENDOR_RETURN' THEN 'VENDOR_RETURN_ONCE'
              ELSE 'INCOMPLETE' END AS research_status,
         'UNSUPPORTED' AS ledger_status,
-        CASE WHEN delist_flag='Y' THEN 'Missing DelDlyDt, amount/payment dates and successor terms; next-session mapping checked against return'
+        CASE WHEN delist_flag='Y' THEN 'Storage mapping basis is explicit; amount/payment/publication dates and successor terms remain unknown'
              ELSE 'Missing event ratio, cash amount, ex/payment dates and target security; do not infer from price changes' END AS reason,
         ret_total_vendor,ret_total_backtest,return_quality
-      FROM panel WHERE delist_flag='Y' OR distribution_return_flag NOT IN ('NO','NA')
+      FROM panel WHERE delist_flag IS DISTINCT FROM 'N' OR distribution_return_flag NOT IN ('NO','NA')
         OR distribution_return_flag IS NULL
       ORDER BY permno,observed_date""", folder / "events.parquet")
     quality = dict(con.execute("SELECT return_quality,count(*) FROM panel GROUP BY 1").fetchall())
@@ -299,23 +346,7 @@ def _run_tables(con, config, plan, panel_paths, factor_folder, factor_context, h
         raise RuntimeError("Feature availability violation")
     # Labels are stored in a separate artifact. Terminal payouts are NOT assigned a
     # made-up availability timestamp; they cannot become model training targets.
-    con.execute(f"""CREATE TEMP TABLE labels AS
-      WITH windows AS (
-        SELECT permno,date,session_index,
-          count(*) OVER w AS n,count(ret_total_for_signal) OVER w AS n_valid,
-          max(session_index) OVER w AS last_index,max(date) OVER w AS label_end_date,
-          max(return_available_at) OVER w AS available_at,
-          count(*) FILTER(WHERE ret_total_for_signal=-1) OVER w AS zeros,
-          sum(CASE WHEN ret_total_for_signal > -1 THEN ln(1+ret_total_for_signal) ELSE 0 END) OVER w AS log_product
-        FROM run_panel WINDOW w AS (PARTITION BY permno ORDER BY date ROWS BETWEEN 1 FOLLOWING AND {horizon} FOLLOWING)
-      ) SELECT permno,w.date AS decision_date,label_end_date,c.close_at AS label_end_time,w.available_at,
-          CASE WHEN n={horizon} AND n_valid={horizon} AND last_index-w.session_index={horizon}
-               THEN CASE WHEN zeros>0 THEN -1.0 ELSE exp(log_product)-1 END END AS forward_vendor_return,
-          CASE WHEN n<{horizon} THEN 'UNREALIZED_OR_TRUNCATED'
-               WHEN n_valid<{horizon} THEN 'MISSING_OR_UNKNOWN_AVAILABILITY'
-               WHEN last_index-w.session_index!={horizon} THEN 'SESSION_GAP'
-               ELSE 'OBSERVED_APPROXIMATE_AVAILABILITY' END AS label_status
-      FROM windows w LEFT JOIN calendar c ON c.date=w.label_end_date""")
+    create_labels(con, horizon, plan.eval_end)
     # Display-only index. The initial observed positive price anchors the interval;
     # its incoming return is not part of the subsequent wealth path.
     con.execute("""CREATE TEMP TABLE wealth AS
@@ -383,7 +414,8 @@ def build_dataset(config, *, data_root=None, output_root=None, pit_mode="approxi
     snapshot_path = output_root / "snapshots" / (catalog.snapshot_id + ".json")
     if not snapshot_path.exists():
         write_json(snapshot_path, catalog.snapshot)
-    schedule = calendar_schedule(date.fromisoformat(catalog.source_start),date.fromisoformat(catalog.source_end),
+    schedule = calendar_schedule(date.fromisoformat(catalog.source_start),
+                                 date.fromisoformat(catalog.source_end) + timedelta(days=4*config.label_horizon_sessions+30),
                                  availability_lag_sessions=config.availability_lag_sessions,
                                  decision=config.decision,calendar_name=config.calendar_name)
     con = duckdb.connect()
@@ -393,7 +425,7 @@ def build_dataset(config, *, data_root=None, output_root=None, pit_mode="approxi
     stage = None
     try:
         _load_reference_tables(con, catalog, schedule)
-        panels, event_files, cache_reused, month_manifests = [], [], [], []
+        panels, event_files, reconciliation_files, cache_reused, month_manifests = [], [], [], [], []
         for key in catalog.selected_months(plan.process_start,plan.eval_end):
             catalog.assert_unchanged()
             target = output_root / "cache" / cache_id[:24] / f"year={key[0]}" / f"month={key[1]:02d}"
@@ -416,6 +448,7 @@ def build_dataset(config, *, data_root=None, output_root=None, pit_mode="approxi
             month_manifests.append(cached)
             panels.append(target / "panel.parquet")
             event_files.append(target / "events.parquet")
+            reconciliation_files.append(target / "terminal_reconciliation.parquet")
         factor_context = {"cache_id":cache_id,"process_start":str(plan.process_start),
                           "factor_lookback_sessions":config.factor_lookback_sessions}
         factors_reused = _run_tables(con,config,plan,panels,
@@ -424,24 +457,28 @@ def build_dataset(config, *, data_root=None, output_root=None, pit_mode="approxi
         metadata_counts = dict(con.execute("SELECT metadata_quality,count(*) FROM run_panel GROUP BY 1").fetchall())
         unresolved = sum(n for k,n in counts.items() if k != "VALID_VENDOR_RETURN")
         review_rows = _count(con,"SELECT count(*) FROM run_panel WHERE requires_review")
-        if quality_policy == "fail" and review_rows:
-            raise RuntimeError(f"Strict quality policy: {review_rows} return/metadata rows require review; no run published")
+        reconciliation_sql = (f"SELECT * FROM {parquet_sql(reconciliation_files)} WHERE observed_date "
+                              f"BETWEEN {q(plan.process_start)} AND {q(plan.eval_end)}")
+        reconciliation_counts = dict(con.execute(f"SELECT reconciliation_status,count(*) FROM ({reconciliation_sql}) GROUP BY 1").fetchall())
+        unresolved_events = sum(n for status,n in reconciliation_counts.items() if status not in {'MATCHED_VALUE','MATCHED_NULL'})
+        if quality_policy == "fail" and (review_rows or unresolved_events):
+            raise RuntimeError(f"Strict quality policy: {review_rows} return/metadata rows and {unresolved_events} terminal reconciliations require review; no run published")
         stage_parent = output_root / "runs"
         stage_parent.mkdir(parents=True,exist_ok=True)
         stage = Path(tempfile.mkdtemp(prefix=".stage-",dir=stage_parent))
         _copy(con,"SELECT * FROM run_panel ORDER BY permno,date",stage / "panel.parquet")
+        _copy(con,reconciliation_sql+" ORDER BY permno,observed_date",stage / "terminal_reconciliation.parquet")
         _copy(con,"SELECT * FROM features ORDER BY permno,decision_date",stage / "features.parquet")
         _copy(con,f"SELECT * FROM features WHERE decision_date BETWEEN {q(plan.eval_start)} AND {q(plan.eval_end)} ORDER BY permno,decision_date",stage / "evaluation_features.parquet")
         _copy(con,"SELECT * FROM labels ORDER BY permno,decision_date",stage / "labels.parquet")
-        cutoff = plan.model_training_cutoff
-        training_where = "false" if plan.train_start is None else (
-            f"f.decision_date BETWEEN {q(plan.train_start)} AND {q(plan.train_end)} "
-            f"AND l.available_at <= TIMESTAMPTZ {q(cutoff.isoformat())} "
-            f"AND l.label_end_time <= TIMESTAMPTZ {q(cutoff.isoformat())}")
-        _copy(con,f"""SELECT f.*,l.label_end_date,l.label_end_time,l.available_at AS label_available_at,l.forward_vendor_return
+        training_audit = create_training_audit(con, plan)
+        _copy(con,"SELECT * FROM training_audit ORDER BY permno,decision_date",stage / "training_audit.parquet")
+        _copy(con,"SELECT * FROM training_audit_summary ORDER BY sample_role,decision_year,exchange_observed,eventual_delisting_in_snapshot",
+              stage / "training_audit_summary.parquet")
+        _copy(con,"""SELECT f.*,l.label_end_date,l.label_end_time,l.available_at AS label_available_at,l.forward_vendor_return
           FROM features f JOIN labels l USING(permno,decision_date)
-          WHERE {training_where} AND f.eligible_for_research AND l.forward_vendor_return IS NOT NULL
-          ORDER BY permno,decision_date""",stage / "training.parquet")
+          JOIN training_audit a USING(permno,decision_date)
+          WHERE a.training_included ORDER BY permno,decision_date""",stage / "training.parquet")
         base = plan.index_base_date
         _copy(con,f"""SELECT w.*,b.wealth_index AS base_wealth,
           CASE WHEN b.wealth_index>0 AND isfinite(b.wealth_index) THEN 100*w.wealth_index/b.wealth_index END AS index_base100,
@@ -478,11 +515,13 @@ def build_dataset(config, *, data_root=None, output_root=None, pit_mode="approxi
                   "created_at_utc":datetime.now(timezone.utc).isoformat(),"git_commit":revision,
                   "policy":policy,"config":config.__dict__,"plan":plan.as_dict(),"rows":artifact_rows,
                   "pit_guarantee":"approximate","limitations":LIMITATIONS,"event_capabilities":EVENT_CAPABILITIES,
-                  "status":"INCOMPLETE_RETURNS" if unresolved else "INCOMPLETE_METADATA" if review_rows else "RESEARCH_ONLY",
+                  "status":"INCOMPLETE_RETURNS" if unresolved or unresolved_events else "INCOMPLETE_METADATA" if review_rows else "RESEARCH_ONLY",
                   "quality_policy":quality_policy,"return_quality":counts,"unresolved_return_rows":unresolved,
                   "metadata_quality":metadata_counts,"requires_review_rows":review_rows,"event_status_counts":event_counts,
                   "factor_history_counts":{"ready":factor_counts.get(True,0),"unready":factor_counts.get(False,0)},
-                  "label_status_counts":label_counts,
+                  "label_status_counts":label_counts,"training_sample_audit":training_audit,
+                  "warnings":training_audit["warnings"] + ([f"{unresolved_events} terminal event reconciliations unresolved; see terminal_reconciliation.parquet"] if unresolved_events else []),
+                  "terminal_reconciliation_counts":reconciliation_counts,"unresolved_terminal_events":unresolved_events,
                   "held_outcome_validation_required":True,"cash_share_ledger_status":"UNSUPPORTED",
                   "cache_months_reused":cache_reused,"factor_cache_reused":factors_reused,
                   "factor_cache_context":factor_context,"months":month_manifests,
@@ -490,8 +529,11 @@ def build_dataset(config, *, data_root=None, output_root=None, pit_mode="approxi
                       "evaluation_features.parquet":"evaluation-period as-of inputs only",
                       "training.parquet":"matured labels joined to eligible past inputs at fixed training cutoff",
                       "labels.parquet":"future outcome targets; do not join without maturity filter",
+                      "training_audit.parquet":"sample dispositions with hindsight; NOT strategy input or decision filter",
+                      "training_audit_summary.parquet":"year/exchange/eventual delisting dropout; AUDIT ONLY",
                       "panel.parquet":"audit/outcomes; NOT strategy input",
                       "events.parquet":"event evidence/unsupported ledger interface; NOT strategy input",
+                      "terminal_reconciliation.parquet":"bidirectional terminal date/key/value/missingness audit; NOT strategy input",
                       "display_indices.parquet":"per-security display; NOT training input or portfolio performance"}}
         catalog.assert_unchanged()
         if code_identity(REPO) != code_id:

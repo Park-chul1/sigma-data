@@ -21,11 +21,13 @@ successor-position or strict availability reconstruction is performed here.
 from __future__ import annotations
 
 import math
+from datetime import timedelta
+from functools import lru_cache
 from numbers import Number
 from typing import Any, Iterable, Mapping
 
 
-EVENT_POLICY_VERSION = "crsp-ciz-embedded-v1"
+EVENT_POLICY_VERSION = "crsp-ciz-embedded-v2"
 
 # CIZ mnemonics, not guesses from legacy numeric DLSTCD ranges.
 EVENT_ACTION_MAP = {
@@ -83,6 +85,60 @@ def validate_return(value: Any) -> str:
     if not math.isfinite(numeric):
         return "NONFINITE"
     return "BELOW_MINUS_ONE" if numeric < -1 else "VALID"
+
+
+# One ordered set of numeric/flag checks for both the record API and DuckDB
+# pipeline. SQL is emitted from these rules so a second builder cannot silently
+# accept a numeric MV, unknown flag, infinity, or legacy sentinel return.
+RETURN_RULES = (
+    ("MISSING_RETURN", lambda r: r.get("ret_total") is None, "{d}.ret_total IS NULL"),
+    ("INVALID_RETURN", lambda r: validate_return(r.get("ret_total")) != "VALID",
+     "NOT isfinite({d}.ret_total) OR {d}.ret_total < -1"),
+    ("INCOMPLETE_VENDOR_RETURN", lambda r: r.get("ret_missing_flag") != "NA",
+     "{d}.ret_missing_flag IS DISTINCT FROM 'NA'"),
+    ("UNKNOWN_DISTRIBUTION_FLAG", lambda r: r.get("distribution_return_flag") not in DISTRIBUTION_EFFECT_MAP,
+     "{d}.distribution_return_flag IS NULL OR {d}.distribution_return_flag NOT IN ({known_dist})"),
+    ("UNKNOWN_DELISTING_FLAG", lambda r: r.get("delist_flag") not in {"N", "Y"},
+     "{d}.delist_flag IS NULL OR {d}.delist_flag NOT IN ('N','Y')"),
+)
+
+
+def daily_return_issue(row: Mapping[str, Any]) -> str | None:
+    """Common numeric and source-code gate; terminal reconciliation is additional."""
+    return next((code for code, predicate, _ in RETURN_RULES if predicate(row)), None)
+
+
+def return_quality_sql(daily="d", event="e", reconciliation="terminal_reconciliation") -> str:
+    """Emit the same daily gate plus explicit terminal reconciliation checks.
+
+    Callers must first compute ``reconciliation`` from exact PERMNO/storage-date
+    keys, values and NULL states. This is only for trusted internal SQL aliases.
+    """
+    known_dist = ",".join("'" + code + "'" for code in DISTRIBUTION_EFFECT_MAP)
+    checks = " ".join(
+        "WHEN (" + sql.format(d=daily, known_dist=known_dist) + ") THEN '" + code + "'"
+        for code, _, sql in RETURN_RULES)
+    supported = ",".join("'" + code + "'" for code in sorted(SUPPORTED_TERMINAL_ACTIONS))
+    return f"""CASE
+        WHEN {daily}.delist_flag='Y' AND {reconciliation} NOT IN ('MATCHED_VALUE','MATCHED_NULL')
+          THEN {reconciliation}
+        {checks}
+        WHEN {daily}.delist_flag='Y' AND ({event}.action_type IS NULL OR {event}.action_type NOT IN ({supported}))
+          THEN 'UNSUPPORTED_TERMINAL_EVENT'
+        WHEN {daily}.delist_flag='Y' AND {event}.event_missing_flag_present
+          AND {event}.event_ret_missing_flag IS DISTINCT FROM 'NA' THEN 'INCOMPLETE_EVENT_RETURN'
+        ELSE 'VALID_VENDOR_RETURN' END"""
+
+
+@lru_cache(maxsize=2048)
+def _fallback_storage_date(event_date):
+    from .temporal import SessionCalendar
+
+    sessions = SessionCalendar(event_date, event_date + timedelta(days=30)).sessions
+    following = next((day for day in sessions if day > event_date), None)
+    if following is None:
+        raise ValueError("No covered next exchange session for terminal fallback")
+    return following
 
 
 def classify_event(event: Mapping[str, Any]) -> dict[str, Any]:
@@ -166,9 +222,10 @@ def resolve_daily_return(
 ) -> dict[str, Any]:
     """Add validated return fields to one unchanged normalized daily record.
 
-    ``reconciled=True`` certifies the caller checked the event key against the
-    *next exchange session* (or source DelDlyDt), not a nearest-date join. The
-    method additionally checks the PERMNO, date order and return equality.
+    ``reconciled=True`` requests verification of an exact event match. The
+    method checks PERMNO, a supplied ``return_storage_date``/``deldlydt`` or the
+    explicit XNYS next-session fallback, date order, values and missing flags.
+    The boolean never bypasses date verification or enables nearest matching.
     A numeric return requires ``ret_missing_flag='NA'``: for example an MV
     flag denotes missing corporate-action value even if a number is stored.
     A valid terminal return without reconciliation is preserved as vendor
@@ -186,13 +243,10 @@ def resolve_daily_return(
     quality = validate_return(raw)
     terminal = daily.get("delist_flag") == "Y"
     distribution = classify_daily_distribution(daily)
-    reason = None if quality == "VALID" else quality
-    if quality == "VALID" and daily.get("ret_missing_flag") != "NA":
-        reason = "INCOMPLETE_VENDOR_RETURN"
-    if quality == "VALID" and distribution["distribution_status"] == "unknown":
-        reason = "UNKNOWN_DISTRIBUTION_FLAG"
-    if daily.get("delist_flag") not in {"N", "Y"}:
-        reason = "UNKNOWN_DELISTING_FLAG"
+    storage_fields = {}
+    reason = daily_return_issue(daily)
+    if reason in {"MISSING_RETURN", "INVALID_RETURN"}:
+        reason = quality
     if terminal:
         if not reconciled or event is None:
             reason = "UNRECONCILED_TERMINAL_RETURN"
@@ -203,18 +257,37 @@ def resolve_daily_return(
                 raise ValueError("Terminal reconciliation requires daily and event dates")
             if event["event_date"] >= daily["date"]:
                 raise ValueError("CIZ terminal storage date must follow delisting event date")
+            source_storage_key = next((key for key in ("return_storage_date", "deldlydt") if key in event), None)
+            uses_fallback = not source_storage_key or event.get("storage_date_basis") == "NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE"
+            expected_storage = _fallback_storage_date(event["event_date"]) if uses_fallback else event[source_storage_key]
+            if source_storage_key and event[source_storage_key] != expected_storage:
+                raise ValueError("Terminal event storage date does not match stated date basis")
+            if expected_storage != daily["date"]:
+                raise ValueError("Terminal event storage date does not match daily record")
+            storage_fields = {
+                "return_storage_date": expected_storage,
+                "source_return_storage_date": None if uses_fallback else expected_storage,
+                "storage_date_basis": "NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE" if uses_fallback else "SOURCE_DELDLYDT",
+            }
             event_quality = validate_return(event.get("delisting_return"))
             if quality == "VALID" and event_quality == "VALID":
-                if not math.isclose(float(raw), float(event["delisting_return"]), rel_tol=1e-12, abs_tol=1e-12):
+                if float(raw) != float(event["delisting_return"]):
                     raise ValueError("Embedded daily and event delisting returns disagree")
             elif quality != event_quality:
                 raise ValueError("Embedded daily and event return missingness/validity disagree")
+            has_event_missing = event.get("event_missing_flag_present", "event_ret_missing_flag" in event)
+            if (has_event_missing
+                    and event.get("event_ret_missing_flag") != daily.get("ret_missing_flag")):
+                raise ValueError("Embedded daily and event return missing flags disagree")
             classified = classify_event(event)
             if classified["event_status"] == "unsupported":
                 reason = "UNSUPPORTED_TERMINAL_EVENT"
             elif quality != "VALID":
                 reason = "MISSING_TERMINAL_RETURN" if quality == "MISSING" else quality
+            elif has_event_missing and event.get("event_ret_missing_flag") != "NA":
+                reason = "INCOMPLETE_EVENT_RETURN"
     result.update(distribution)
+    result.update(storage_fields)
     result.update({
         "ret_total_vendor": raw,
         "ret_total_backtest": float(raw) if reason is None else None,
@@ -229,6 +302,8 @@ def resolve_daily_return(
         "review_reason": reason,
         "is_delisting_return": terminal,
         "is_eventual_outcome": terminal,
+        "daily_record_type": ("TERMINAL_RETURN_STORAGE" if terminal else
+                              "ORDINARY_DAILY" if daily.get("delist_flag") == "N" else "UNKNOWN_SOURCE_FLAG"),
         "usable_as_feature": not terminal and reason is None,
         "cash_available_at": None,
         "event_policy_version": EVENT_POLICY_VERSION,
@@ -295,6 +370,12 @@ def validate_held_outcomes(
             reason = quality
         elif row.get("requires_review"):
             reason = row.get("review_reason") or "HELD_OUTCOME_REQUIRES_REVIEW"
+        elif "ret_missing_flag" in row and row["ret_missing_flag"] != "NA":
+            reason = "INCOMPLETE_VENDOR_RETURN"
+        elif "delist_flag" in row and row["delist_flag"] not in {"N", "Y"}:
+            reason = "UNKNOWN_DELISTING_FLAG"
+        elif terminal and row.get("terminal_reconciliation", "MATCHED_VALUE") not in {"MATCHED_VALUE", "MATCHED_NULL"}:
+            reason = "UNRECONCILED_TERMINAL_RETURN"
         elif event_status in {"unknown", "unsupported"}:
             reason = "UNSUPPORTED_HELD_EVENT"
         elif research_status in {"unknown", "unsupported", "incomplete"}:

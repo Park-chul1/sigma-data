@@ -89,13 +89,32 @@ class EventTests(unittest.TestCase):
             validate_held_outcomes([result], [10001])
         self.assertEqual(validate_held_outcomes([result], [10001], mode="incomplete")["status"], "incomplete")
 
+    def test_optional_absent_event_flag_and_fallback_provenance_match_pipeline(self):
+        result = resolve_daily_return(
+            daily(ret_total=-0.5, delist_flag="Y", distribution_return_flag="D1"),
+            terminal(return_storage_date=date(2020, 1, 3), source_return_storage_date=None,
+                     storage_date_basis="NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE",
+                     event_ret_missing_flag=None, event_missing_flag_present=False), reconciled=True)
+        self.assertEqual(result["ret_total_backtest"], -0.5)
+        self.assertIsNone(result["source_return_storage_date"])
+        self.assertEqual(result["storage_date_basis"], "NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE")
+
     def test_bad_terminal_reconciliation_is_rejected(self):
         row = daily(ret_total=-0.5, delist_flag="Y", distribution_return_flag="D1")
         self.assertIsNone(resolve_daily_return(row)["ret_total_backtest"])
         for bad in (terminal(permno=9), terminal(delisting_return=-0.4),
-                    terminal(delisting_return=None), terminal(event_date=row["date"])):
+                    terminal(delisting_return=None), terminal(event_date=row["date"]),
+                    terminal(return_storage_date=date(2020, 1, 6)),
+                    terminal(return_storage_date=None),
+                    terminal(event_ret_missing_flag="MV")):
             with self.subTest(event=bad), self.assertRaises(ValueError):
                 resolve_daily_return(row, bad, reconciled=True)
+        with self.assertRaisesRegex(ValueError, "storage date"):
+            resolve_daily_return(dict(row, date=date(2020, 1, 6)), terminal(), reconciled=True)
+        result = resolve_daily_return(dict(row, date=date(2020, 1, 6)),
+                                      terminal(deldlydt=date(2020, 1, 6)), reconciled=True)
+        self.assertEqual(result["ret_total_backtest"], -0.5)
+        self.assertEqual(result["storage_date_basis"], "SOURCE_DELDLYDT")
 
     def test_numeric_partial_vendor_return_is_not_released(self):
         for flag in ("MV", None, "UNSEEN"):
@@ -166,6 +185,9 @@ class EventTests(unittest.TestCase):
             with self.subTest(changes=changes), self.assertRaises(HeldOutcomeError):
                 validate_held_outcomes([dict(row, **changes)], [10001], accounting_mode="cash_shares")
         for changes in ({"distribution_return_flag": "UNKNOWN"},
+                        {"ret_missing_flag": "MV"},
+                        {"delist_flag": None},
+                        {"delist_flag": "UNKNOWN"},
                         {"delist_flag": "Y", "action_type": "UNKNOWN"},
                         {"return_quality": "INCOMPLETE_VENDOR_RETURN"},
                         {"event_status": "UNSUPPORTED"},

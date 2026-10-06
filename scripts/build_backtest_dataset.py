@@ -45,6 +45,13 @@ def main():
     print(f"Status: {manifest['status']}; PIT: {manifest['pit_guarantee']}")
     print(f"Unresolved return rows: {manifest['unresolved_return_rows']}")
     print(f"Evaluation inputs: {manifest['rows']['evaluation_features.parquet']}; training examples: {manifest['rows']['training.parquet']}")
+    audit = manifest["training_sample_audit"]
+    print(f"Training audit: feature candidates={audit['feature_based_candidates']}; "
+          f"included={audit['included']}; excluded={audit['excluded']}")
+    print("Training exclusions and hindsight groups are audit-only: "
+          "training_audit.parquet / training_audit_summary.parquet.")
+    for warning in manifest.get("warnings", []):
+        print(f"WARNING: {warning}", file=sys.stderr)
     print("No next-open fills or portfolio performance are simulated. See _SUCCESS.json for policies and limitations.")
 
 

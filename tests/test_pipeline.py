@@ -46,7 +46,7 @@ class CanonicalFixture:
                 missing = (permno == 300 and session == date(2024, 1, 17)) or (permno == 201 and terminal)
                 ret = None if missing else -1.0 if terminal else 0.0 if permno == 500 else 0.01
                 price = 100.0
-                flag, retx = "NO", ret
+                flag, retx = "D1" if terminal else "NO", ret
                 if permno == 500:
                     if session >= date(2024, 1, 16):
                         price = 50.0
@@ -141,7 +141,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(manifest["rows"]["calendar.parquet"], len(manifest["plan"]["loaded_sessions"]))
         self.assertEqual(self.query(folder, "labels.parquet", """SELECT forward_vendor_return,label_status
             FROM result WHERE permno=100 AND decision_date=DATE '2024-01-26'"""),
-            [(None, "UNREALIZED_OR_TRUNCATED")])
+            [(None, "PERIOD_END_TRUNCATED")])
 
     def test_preopen_and_zero_lag_still_exclude_same_day_ohlcv(self):
         folder, _ = self.build(decision="preopen", availability_lag_sessions=0)
@@ -275,7 +275,7 @@ class PipelineTests(unittest.TestCase):
                          [(date(2024, 1, 24),)])
         self.assertEqual(self.query(shorter, "labels.parquet", """SELECT forward_vendor_return,label_status
             FROM result WHERE permno=100 AND decision_date=DATE '2024-01-24'"""),
-                         [(None, "UNREALIZED_OR_TRUNCATED")])
+                         [(None, "PERIOD_END_TRUNCATED")])
 
     def test_total_loss_cannot_resurrect_factor_eligibility(self):
         revised = []

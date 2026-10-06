@@ -1,6 +1,6 @@
 # CRSP source evidence and bounded input audit
 
-Checked 2026-10-03. This records facts about the local snapshot and source
+Checked 2026-10-03; field and policy refresh 2026-10-06. This records facts about the local snapshot and source
 semantics; it does not certify the original public availability of each value.
 No WRDS connection or download was made. Licensed sample values are written only
 to the ignored local report, never to this document or synthetic fixtures.
@@ -41,6 +41,41 @@ is a separate field. Neither is automatically the time cash became available.
 See the [official CRSP10 guide, delistings section](https://www.crsp.org/wp-content/uploads/guides/CRSP10_Year_US_Stock_Database_Guide.pdf).
 The local extract did not ingest these fields; event/storage matching therefore
 uses the documented convention and is checked against the current snapshot.
+
+### 2026-10-06 field and policy refresh
+
+Read-only Parquet schema inspection again confirmed that **both** the existing
+raw `stkdelists` and normalized delistings omit `DelDlyDt` and `DelRetMissType`.
+The saved WRDS schema lists these available source fields; that listing is not
+evidence that their values were collected. No RAW/NORMALIZED file was changed.
+The official CIZ guide's indexed primary-table definition was readable and
+distinguishes `DlyDelFlg=Y` (terminal return) from `N` (ordinary return). The
+official indexed CRSP10 delisting definition remained readable, but direct
+opening of its PDF returned 404. These indexed official extracts support the
+storage convention; unavailable PDF content has not been treated as inspected.
+The live distribution-impact and return-missing dictionaries linked below were
+also rechecked. The CIZ guide associates both `DelRetMissType` and
+`DlyRetMissFlg` with the same RM dictionary.
+
+The canonical builder now accepts an actually present normalized
+`deldlydt` or `return_storage_date` field as source evidence. If the field is
+absent, `storage_date_basis=NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE` explicitly
+labels the derived next-XNYS-session candidate and `source_return_storage_date`
+stays NULL. A present-but-NULL source date stays unknown. No nearest-date
+matching is allowed. Exact PERMNO/storage keys, return values and NULL states
+are checked independently from daily numeric/quality validation. When an RM
+event flag is supplied, its presence, code and agreement are also checked.
+`terminal_reconciliation.parquet` retains reverse event-to-daily failures,
+including absent rows and nonterminal flags. Its dates and future event details
+are audit evidence only, never decision inputs or publication/payment times.
+
+The record API verifies the same exact storage key even when the caller passes
+`reconciled=True`; that argument cannot authorize arbitrary later dates. Both
+paths share the numeric/source-flag gate: finite return at least -1, `NA`
+missing flag and known distribution/delisting flags. `DelRet` corroborates the
+stored CIZ terminal return and is never added again. This strengthens internal
+consistency and approximate PIT; it does not establish historical vintages or
+the availability of terminal proceeds.
 
 ## Event and missing-value code evidence
 
@@ -132,3 +167,20 @@ opening prices for next-open execution, full distributions and terminal
 amount/payment timing, complete boundary events, source release identifiers,
 and historical availability/vintage data. Strict PIT and share/cash-ledger
 reconstruction remain unverified with this input snapshot.
+
+## Re-executed local validation, 2026-10-06 (Asia/Seoul)
+
+The existing read-only inspector was rerun with `--calendar --full-terminal-check`:
+24 assertions passed, zero failed. Report:
+`data/derived/research_validation/input_audit_20261005.json`. Its full-period
+terminal diagnostic joins on PERMNO and then checks the storage convention; the
+new canonical run audit uses exact PERMNO/storage-date keys in both directions.
+Known boundary/missing/quality counts above remain unresolved, not repaired.
+
+The unified builder was run for 2020-08-03 through 2020-09-04, with preparation
+from 2020-05-29, and separately at the left boundary 2000-01-04 through 2000-01-07
+with preparation from 2000-01-03. Each passed 80 independent export checks. The
+representative run retains 3,615 unresolved return rows; the boundary run retains
+876, including all three unmatched terminal rows. Both are `INCOMPLETE_RETURNS`.
+See [current pipeline validation](PIT_RESEARCH_PIPELINE.md#검증과-남은-한계) for
+commands, run identifiers, sample-dropout counts and precise verification scope.

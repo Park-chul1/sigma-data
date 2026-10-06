@@ -20,6 +20,9 @@ ARTIFACTS = {
     "labels": "labels.parquet", "events": "events.parquet",
     "display": "display_indices.parquet", "calendar": "calendar.parquet",
     "identity_events": "identity_events.parquet",
+    "training_audit": "training_audit.parquet",
+    "training_audit_summary": "training_audit_summary.parquet",
+    "terminal_reconciliation": "terminal_reconciliation.parquet",
 }
 SOURCE_COLUMNS = (
     "permno", "date", "price_raw", "market_cap_kusd", "ret_total", "ret_ex_div",
@@ -44,7 +47,7 @@ def validate(run_path: Path, data_root: Path | None = None) -> dict:
     if cutoff is None:
         raise ValueError("Run manifest has no model-training cutoff")
     report = {"created_at_utc": datetime.now(timezone.utc).isoformat(),
-              "validator_version": 1, "run": str(run_path), "run_id": manifest["run_id"],
+              "validator_version": 2, "run": str(run_path), "run_id": manifest["run_id"],
               "snapshot_id": manifest["snapshot_id"], "run_status": manifest["status"],
               "pit_guarantee": manifest["pit_guarantee"], "checks": {}, "counts": {},
               "unperformed": ["historical publication/vintage verification", "order fills and cash/share ledger accounting"]}
@@ -134,6 +137,31 @@ def validate(run_path: Path, data_root: Path | None = None) -> dict:
         query_check("training_label_values_preserved", """select count(*) from training t left join labels l using(permno,decision_date)
             where l.permno is null or t.forward_vendor_return is distinct from l.forward_vendor_return
                or t.label_end_time is distinct from l.label_end_time or t.label_available_at is distinct from l.available_at""")
+        query_check("audit_preserves_all_feature_candidates", """select count(*) from (
+            (select permno,decision_date from features except all select permno,decision_date from training_audit)
+            union all (select permno,decision_date from training_audit except all select permno,decision_date from features))""")
+        query_check("audit_included_equals_training", """select count(*) from (
+            (select permno,decision_date from training except all select permno,decision_date from training_audit where training_included)
+            union all (select permno,decision_date from training_audit where training_included except all select permno,decision_date from training))""")
+        query_check("audit_no_invalid_inclusion", """select count(*) from training_audit where training_included
+            and (not training_candidate or not feature_eligible or sample_role!='TRAINING'
+                 or outcome_disposition!='USABLE_AT_CUTOFF' or label_status!='OBSERVED_APPROXIMATE_AVAILABILITY'
+                 or label_available_at is null or label_available_at>?::timestamptz
+                 or label_end_time is null or label_end_time>?::timestamptz)""", [cutoff,cutoff])
+        query_check("audit_summary_totals", """select count(*) from (
+            select sum(training_candidates) as candidates,sum(training_included) as included,sum(training_excluded) as excluded
+            from training_audit_summary) s where
+            s.candidates is distinct from (select count(*) from training_audit where training_candidate)
+            or s.included is distinct from (select count(*) from training)
+            or s.excluded is distinct from (select count(*) from training_audit where training_candidate and not training_included)""")
+        expected_candidates = manifest["training_sample_audit"]["feature_based_candidates"]
+        query_check("audit_manifest_candidates", "select abs(count(*)-?) from training_audit where training_candidate", [expected_candidates])
+        query_check("unobservable_labels_remain_null", """select count(*) from labels
+            where label_status!='OBSERVED_APPROXIMATE_AVAILABILITY' and (forward_vendor_return is not null or available_at is not null)""")
+        query_check("complete_labels_have_exact_horizon", """select count(*) from labels
+            where label_status='OBSERVED_APPROXIMATE_AVAILABILITY' and
+              (observed_sessions!=? or valid_sessions!=? or terminal_sessions>0 or has_session_gap or period_end_truncated)""",
+            [config["label_horizon_sessions"],config["label_horizon_sessions"]])
         query_check("vendor_return_preserved", "select count(*) from panel where ret_total_vendor is distinct from ret_total")
         query_check("valid_returns_match_vendor_once", """select count(*) from panel where return_quality='VALID_VENDOR_RETURN'
             and (ret_total_backtest is distinct from ret_total or ret_total is null or not isfinite(ret_total)
@@ -147,6 +175,17 @@ def validate(run_path: Path, data_root: Path | None = None) -> dict:
             and terminal_event_date is not null and ret_total is distinct from delisting_return""")
         query_check("terminal_event_one_storage_row", """select count(*) from (select permno,terminal_event_date from panel
             where delist_flag='Y' and terminal_event_date is not null group by all having count(*) != 1)""")
+        query_check("terminal_reconciliation_preserves_storage_dates", """select count(*) from terminal_reconciliation
+            where reconciliation_status in ('MATCHED_VALUE','MATCHED_NULL') and
+              (actual_daily_date is distinct from return_storage_date or delist_flag is distinct from 'Y'
+               or ret_total_vendor is distinct from delisting_return or effective_date>=return_storage_date
+               or (storage_date_basis='SOURCE_DELDLYDT' and source_return_storage_date is distinct from return_storage_date)
+               or (storage_date_basis='NEXT_SESSION_FALLBACK_NOT_SOURCE_DATE' and source_return_storage_date is not null))""")
+        query_check("terminal_reconciliation_no_silent_loss", """select count(*) from panel p
+            where p.delist_flag='Y' and not exists(select 1 from terminal_reconciliation r
+              where r.permno=p.permno and r.actual_daily_date=p.date)""")
+        query_check("manifest_terminal_reconciliation_count", """select abs(count(*)-?) from terminal_reconciliation
+            where reconciliation_status not in ('MATCHED_VALUE','MATCHED_NULL')""", [manifest["unresolved_terminal_events"]])
         query_check("valid_terminal_requires_event", """select count(*) from panel where delist_flag='Y'
             and return_quality='VALID_VENDOR_RETURN' and (terminal_event_date is null or terminal_event_date>=date)""")
         query_check("events_preserve_vendor_outcomes", """select count(*) from events e left join panel p
